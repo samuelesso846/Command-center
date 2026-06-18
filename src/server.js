@@ -25,6 +25,8 @@ app.use(session({
 app.use(require('./routes/auth'));
 app.use(require('./routes/dashboard'));
 app.use(require('./routes/sites'));
+app.use(require('./routes/ai'));
+app.use(require('./routes/api'));
 
 app.get('/', (req, res) => res.redirect('/login'));
 

@@ -1,0 +1,13 @@
+<!DOCTYPE html><html><head><title>Créer mon agence</title></head>
+<body>
+<h1>Créer mon agence</h1>
+<% if (error) { %><p style="color:red"><%= error %></p><% } %>
+<form method="POST" action="/register">
+  <input name="agency_name" placeholder="Nom de l'agence" required><br>
+  <input name="full_name" placeholder="Votre nom" required><br>
+  <input name="phone" placeholder="Téléphone"><br>
+  <input name="email" type="email" placeholder="Email" required><br>
+  <input name="password" type="password" placeholder="Mot de passe" required><br>
+  <button type="submit">Créer</button>
+</form>
+</body></html>

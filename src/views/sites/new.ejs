@@ -1,0 +1,17 @@
+<!DOCTYPE html><html><head><title>Créer un site</title></head><body>
+<h1>🌐 Créer un Site Web</h1>
+<% if (error) { %><p style="color:red"><%= error %></p><% } %>
+<form method="POST" action="/sites/generate">
+<select name="template" required>
+<% templates.forEach(t => { %><option value="<%= t.key %>"><%= t.icon %> <%= t.label %></option><% }) %>
+</select><br><br>
+<input name="businessName" placeholder="Nom du business" required><br><br>
+<input name="niche" placeholder="Niche / secteur" required><br><br>
+<textarea name="description" rows="4" placeholder="Décrivez le business en détail (lieu, spécialités, ce qui le rend unique)..." required></textarea><br><br>
+<input type="color" name="color" value="#4285f4"><br><br>
+<input name="email" type="email" placeholder="Email contact"><br><br>
+<input name="phone" placeholder="Téléphone contact"><br><br>
+<button type="submit">✨ Générer le site</button>
+</form>
+<a href="/dashboard">← Retour</a>
+</body></html>

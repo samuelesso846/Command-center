@@ -1,0 +1,12 @@
+<!DOCTYPE html><html><head><title>Mes sites</title></head><body>
+<h1>Mes sites</h1>
+<a href="/sites/new">+ Nouveau site</a>
+<ul>
+<% sites.forEach(s => { %>
+<li><strong><%= s.site_name %></strong> (<%= s.template %>)
+— <a href="/sites/<%= s.id %>/preview" target="_blank">Aperçu</a>
+— <a href="/sites/<%= s.id %>/download">Télécharger</a></li>
+<% }) %>
+</ul>
+<a href="/dashboard">← Retour</a>
+</body></html>

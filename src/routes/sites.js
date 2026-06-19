@@ -35,7 +35,12 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
 });
 
 router.get('/sites', requireAuth, async (req, res) => {
-  const { data: sites } = await req.supabase.from('sites').select('*').order('created_at', { ascending: false });
+  const { data: sites, error: sitesError } = await req.supabase
+    .from('sites')
+    .select('*')
+    .eq('agency_id', req.agencyId)
+    .order('created_at', { ascending: false });
+  if (sitesError) console.error('Erreur sites:', sitesError);
   res.render('sites/list', { sites: sites || [] });
 });
 

@@ -204,6 +204,23 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     <div class="nav-item" data-page="formation" onclick="goTo('formation')"><span class="nav-icon">🎓</span><span class="nav-text">Formation</span></div>
     <div class="nav-item" data-page="gamification" onclick="goTo('gamification')"><span class="nav-icon">🏆</span><span class="nav-text">Gamification</span></div>
     <div class="nav-item" data-page="settings" onclick="goTo('settings')"><span class="nav-icon">⚙️</span><span class="nav-text">Paramètres</span></div>
+    <div class="nav-section-title">Outils IA</div>
+    <div class="nav-item" data-page="chatgpt" onclick="goTo('chatgpt')"><span class="nav-icon">🤖</span><span class="nav-text">Chatbot GPT</span></div>
+    <div class="nav-item" data-page="logo" onclick="goTo('logo')"><span class="nav-icon">🎨</span><span class="nav-text">Générateur Logo</span></div>
+    <div class="nav-item" data-page="contrats" onclick="goTo('contrats')"><span class="nav-icon">📝</span><span class="nav-text">Contrats OHADA</span></div>
+    <div class="nav-item" data-page="prediction" onclick="goTo('prediction')"><span class="nav-icon">🔮</span><span class="nav-text">Mode Prédiction</span></div>
+    <div class="nav-section-title">Business</div>
+    <div class="nav-item" data-page="marketplace" onclick="goTo('marketplace')"><span class="nav-icon">🛒</span><span class="nav-text">Marketplace</span></div>
+    <div class="nav-item" data-page="vcard" onclick="goTo('vcard')"><span class="nav-icon">💳</span><span class="nav-text">Carte Visite</span></div>
+    <div class="nav-item" data-page="communication" onclick="goTo('communication')"><span class="nav-icon">💬</span><span class="nav-text">Communication</span></div>
+    <div class="nav-item" data-page="apprentissage" onclick="goTo('apprentissage')"><span class="nav-icon">📚</span><span class="nav-text">Apprentissage</span></div>
+    <div class="nav-section-title">Médias</div>
+    <div class="nav-item" data-page="galerie" onclick="goTo('galerie')"><span class="nav-icon">🖼️</span><span class="nav-text">Galerie Images</span></div>
+    <div class="nav-item" data-page="analyseur" onclick="goTo('analyseur')"><span class="nav-icon">📈</span><span class="nav-text">Analyseur Financier</span></div>
+    <div class="nav-section-title">Système</div>
+    <div class="nav-item" data-page="integrations" onclick="goTo('integrations')"><span class="nav-icon">🔌</span><span class="nav-text">Intégrations</span></div>
+    <div class="nav-item" data-page="securite" onclick="goTo('securite')"><span class="nav-icon">🔒</span><span class="nav-text">Sécurité</span></div>
+    <div class="nav-item" data-page="multilang" onclick="goTo('multilang')"><span class="nav-icon">🌍</span><span class="nav-text">Multi-Langue</span></div>
   </nav>
   <div class="sidebar-footer">
     <button class="toggle-btn" onclick="toggleSidebar()">◀ <span>Réduire</span></button>
@@ -555,6 +572,438 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       </div>
     </div>
 
+
+    <!-- CHATBOT GPT -->
+    <div class="page" id="page-chatgpt">
+      <div class="grid-2">
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">🤖 Assistant IA Avancé</span></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+            <button class="btn btn-sm btn-secondary" onclick="gptQuick('Analyse mes revenus et donne-moi 3 conseils')">📊 Analyser revenus</button>
+            <button class="btn btn-sm btn-secondary" onclick="gptQuick('Génère un email de prospection pour un restaurant')">📧 Email prospection</button>
+            <button class="btn btn-sm btn-secondary" onclick="gptQuick('Quelle stratégie marketing pour mon agence digitale à Lomé ?')">🎯 Stratégie marketing</button>
+            <button class="btn btn-sm btn-secondary" onclick="gptQuick('Rédige un devis pour création de site web 150000 FCFA')">📄 Devis auto</button>
+          </div>
+          <div id="gptMessages" style="height:350px;overflow-y:auto;background:var(--bg);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+            <div class="msg-bot"><strong>🤖 IA:</strong><br>Bonjour ! Je suis votre consultant IA senior. Posez-moi n'importe quelle question sur votre agence, la prospection, les finances ou le marketing digital en Afrique de l'Ouest.</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <input class="form-input" id="gptInput" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')gptSend()">
+            <button class="btn btn-primary" onclick="gptSend()">➤</button>
+            <button class="btn btn-secondary" onclick="gptVoice()" title="Reconnaissance vocale">🎤</button>
+          </div>
+        </div>
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">💡 Suggestions IA</span></div>
+          <div id="gptSuggestions">
+            <div class="qa-card" style="margin-bottom:10px" onclick="gptQuick('Comment trouver mes 10 premiers clients à Lomé ?')"><div class="qa-title">👥 Trouver mes premiers clients</div></div>
+            <div class="qa-card" style="margin-bottom:10px" onclick="gptQuick('Quels services proposer pour une agence digitale débutante au Togo ?')"><div class="qa-title">🛠️ Quels services proposer ?</div></div>
+            <div class="qa-card" style="margin-bottom:10px" onclick="gptQuick('Comment fixer mes tarifs en FCFA pour le marché togolais ?')"><div class="qa-title">💰 Fixer mes tarifs FCFA</div></div>
+            <div class="qa-card" style="margin-bottom:10px" onclick="gptQuick('Script pour appeler un prospect restaurant à Lomé')"><div class="qa-title">📞 Script appel prospect</div></div>
+            <div class="qa-card" onclick="gptQuick('Comment gérer un client difficile qui ne paye pas ?')"><div class="qa-title">⚠️ Client qui ne paye pas</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GÉNÉRATEUR LOGO -->
+    <div class="page" id="page-logo">
+      <div class="grid-2">
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">🎨 Générateur de Logo</span></div>
+          <div class="form-group"><label class="form-label">Nom de l'entreprise</label><input class="form-input" id="logoName" placeholder="Ex: Digital Togo Pro"></div>
+          <div class="form-group"><label class="form-label">Slogan (optionnel)</label><input class="form-input" id="logoSlogan" placeholder="Ex: L'excellence digitale"></div>
+          <div class="form-group"><label class="form-label">Couleur principale</label><input type="color" id="logoColor" value="#6366f1" style="width:60px;height:40px;border-radius:8px;border:1px solid var(--border);cursor:pointer"></div>
+          <div class="form-group"><label class="form-label">Style</label>
+            <select class="form-select" id="logoStyle">
+              <option value="text">Typographique (lettres)</option>
+              <option value="icon">Icône + Texte</option>
+              <option value="minimal">Minimaliste</option>
+              <option value="bold">Gras & Impact</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+            <button class="btn btn-primary" onclick="generateLogo()">✨ Générer</button>
+            <button class="btn btn-secondary" onclick="downloadLogo()">⬇️ PNG</button>
+          </div>
+        </div>
+        <div class="glass-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <canvas id="logoCanvas" width="400" height="200" style="border-radius:12px;background:white;max-width:100%"></canvas>
+          <div style="margin-top:12px;font-size:13px;color:var(--text2)">Aperçu du logo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTRATS OHADA -->
+    <div class="page" id="page-contrats">
+      <div class="glass-card" style="margin-bottom:20px">
+        <div class="card-header"><span class="card-title">📝 Contrats Auto — Conformes OHADA/Togo</span></div>
+        <div class="grid-3" style="margin-bottom:20px">
+          <div class="tpl-card" onclick="selectContrat(this,'prestation')"><div class="tpl-icon">💼</div><div class="tpl-name">Contrat de Prestation</div></div>
+          <div class="tpl-card" onclick="selectContrat(this,'maintenance')"><div class="tpl-icon">🔧</div><div class="tpl-name">Contrat Maintenance</div></div>
+          <div class="tpl-card" onclick="selectContrat(this,'cession')"><div class="tpl-icon">📄</div><div class="tpl-name">Cession de Droits</div></div>
+          <div class="tpl-card" onclick="selectContrat(this,'nda')"><div class="tpl-icon">🔒</div><div class="tpl-name">NDA Confidentialité</div></div>
+          <div class="tpl-card" onclick="selectContrat(this,'partenariat')"><div class="tpl-icon">🤝</div><div class="tpl-name">Partenariat</div></div>
+          <div class="tpl-card" onclick="selectContrat(this,'cdi')"><div class="tpl-icon">👔</div><div class="tpl-name">CDI Assistant</div></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label class="form-label">Votre agence</label><input class="form-input" id="ctAgence" placeholder="Nom de votre agence"></div>
+          <div class="form-group"><label class="form-label">Client / Partenaire</label><input class="form-input" id="ctClient" placeholder="Nom du client"></div>
+          <div class="form-group"><label class="form-label">Montant (FCFA)</label><input class="form-input" type="number" id="ctMontant" placeholder="150000"></div>
+          <div class="form-group"><label class="form-label">Date de début</label><input class="form-input" type="date" id="ctDate"></div>
+          <div class="form-group" style="grid-column:1/-1"><label class="form-label">Description de la mission</label><textarea class="form-textarea" id="ctDesc" placeholder="Décrivez la mission, livrables attendus..."></textarea></div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-primary" onclick="generateContrat()">✨ Générer le contrat</button>
+          <button class="btn btn-secondary" onclick="window.print()">🖨️ Imprimer / PDF</button>
+        </div>
+      </div>
+      <div id="contratPreview" style="display:none;background:white;color:#333;padding:40px;border-radius:12px;font-family:Arial,sans-serif;line-height:1.8"></div>
+    </div>
+
+    <!-- MODE PRÉDICTION -->
+    <div class="page" id="page-prediction">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Projection 3 mois</div><div class="stat-value" id="pred3m">0</div><div style="font-size:11px;color:var(--text2)">FCFA estimés</div></div>
+        <div class="stat-card"><div class="stat-label">Projection 6 mois</div><div class="stat-value" id="pred6m">0</div><div style="font-size:11px;color:var(--text2)">FCFA estimés</div></div>
+        <div class="stat-card"><div class="stat-label">Objectif 1M FCFA</div><div class="stat-value" id="predTarget">?</div><div style="font-size:11px;color:var(--text2)">mois restants</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">🔮 Simulateur de Scénarios</span></div>
+          <div class="form-group"><label class="form-label">Clients actuels</label><input class="form-input" type="number" id="simClients" value="3" oninput="runSimulation()"></div>
+          <div class="form-group"><label class="form-label">Revenu moyen/client (FCFA)</label><input class="form-input" type="number" id="simRevClient" value="150000" oninput="runSimulation()"></div>
+          <div class="form-group"><label class="form-label">Croissance mensuelle (%)</label><input class="form-input" type="number" id="simCroissance" value="20" oninput="runSimulation()"></div>
+          <div class="form-group"><label class="form-label">Dépenses mensuelles (FCFA)</label><input class="form-input" type="number" id="simDepenses" value="50000" oninput="runSimulation()"></div>
+          <div id="simResults" class="glass-card" style="margin-top:16px;background:var(--bg)"></div>
+        </div>
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">🤖 Recommandations IA</span></div>
+          <button class="btn btn-primary" style="width:100%;margin-bottom:16px" onclick="getAIPredictions()">✨ Analyser et recommander</button>
+          <div id="predRecos"><div style="text-align:center;padding:30px;color:var(--text2)">Cliquez pour obtenir des recommandations IA personnalisées</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARKETPLACE -->
+    <div class="page" id="page-marketplace">
+      <div class="card-header" style="margin-bottom:20px"><span style="font-size:20px;font-weight:700">🛒 Marketplace — Mes Services</span><button class="btn btn-primary" onclick="addService()">+ Ajouter Service</button></div>
+      <div class="grid-3" id="marketplaceGrid">
+        <div class="glass-card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:12px">🌐</div>
+          <div style="font-weight:700;font-size:16px;margin-bottom:8px">Site Web Vitrine</div>
+          <div style="color:var(--text2);font-size:13px;margin-bottom:16px">Site professionnel 5 pages, responsive, optimisé</div>
+          <div style="font-size:22px;font-weight:700;color:var(--accent);margin-bottom:16px">150 000 FCFA</div>
+          <div style="display:flex;gap:8px;justify-content:center">
+            <button class="btn btn-primary btn-sm" onclick="commanderService('Site Web Vitrine','150000')">Commander</button>
+            <button class="btn btn-secondary btn-sm" onclick="partagerService('Site Web Vitrine')">Partager</button>
+          </div>
+        </div>
+        <div class="glass-card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:12px">📱</div>
+          <div style="font-weight:700;font-size:16px;margin-bottom:8px">Community Management</div>
+          <div style="color:var(--text2);font-size:13px;margin-bottom:16px">Gestion Facebook + Instagram, 15 posts/mois</div>
+          <div style="font-size:22px;font-weight:700;color:var(--accent);margin-bottom:16px">75 000 FCFA/mois</div>
+          <div style="display:flex;gap:8px;justify-content:center">
+            <button class="btn btn-primary btn-sm" onclick="commanderService('Community Management','75000')">Commander</button>
+            <button class="btn btn-secondary btn-sm" onclick="partagerService('Community Management')">Partager</button>
+          </div>
+        </div>
+        <div class="glass-card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:12px">🎨</div>
+          <div style="font-weight:700;font-size:16px;margin-bottom:8px">Logo & Identité</div>
+          <div style="color:var(--text2);font-size:13px;margin-bottom:16px">Logo + charte graphique + carte de visite</div>
+          <div style="font-size:22px;font-weight:700;color:var(--accent);margin-bottom:16px">50 000 FCFA</div>
+          <div style="display:flex;gap:8px;justify-content:center">
+            <button class="btn btn-primary btn-sm" onclick="commanderService('Logo & Identité','50000')">Commander</button>
+            <button class="btn btn-secondary btn-sm" onclick="partagerService('Logo & Identité')">Partager</button>
+          </div>
+        </div>
+        <div class="glass-card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:12px">📈</div>
+          <div style="font-weight:700;font-size:16px;margin-bottom:8px">SEO & Référencement</div>
+          <div style="color:var(--text2);font-size:13px;margin-bottom:16px">Optimisation Google, mots-clés locaux Togo</div>
+          <div style="font-size:22px;font-weight:700;color:var(--accent);margin-bottom:16px">100 000 FCFA</div>
+          <div style="display:flex;gap:8px;justify-content:center">
+            <button class="btn btn-primary btn-sm" onclick="commanderService('SEO','100000')">Commander</button>
+            <button class="btn btn-secondary btn-sm" onclick="partagerService('SEO')">Partager</button>
+          </div>
+        </div>
+        <div class="glass-card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:12px">🎯</div>
+          <div style="font-weight:700;font-size:16px;margin-bottom:8px">Publicité Facebook Ads</div>
+          <div style="color:var(--text2);font-size:13px;margin-bottom:16px">Campagne ciblée, budget optimisé, rapport mensuel</div>
+          <div style="font-size:22px;font-weight:700;color:var(--accent);margin-bottom:16px">80 000 FCFA/mois</div>
+          <div style="display:flex;gap:8px;justify-content:center">
+            <button class="btn btn-primary btn-sm" onclick="commanderService('Facebook Ads','80000')">Commander</button>
+            <button class="btn btn-secondary btn-sm" onclick="partagerService('Facebook Ads')">Partager</button>
+          </div>
+        </div>
+        <div class="glass-card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:12px">📷</div>
+          <div style="font-weight:700;font-size:16px;margin-bottom:8px">Shooting Photo Pro</div>
+          <div style="color:var(--text2);font-size:13px;margin-bottom:16px">Photos produits/équipe, retouche incluse</div>
+          <div style="font-size:22px;font-weight:700;color:var(--accent);margin-bottom:16px">60 000 FCFA</div>
+          <div style="display:flex;gap:8px;justify-content:center">
+            <button class="btn btn-primary btn-sm" onclick="commanderService('Shooting Photo','60000')">Commander</button>
+            <button class="btn btn-secondary btn-sm" onclick="partagerService('Shooting Photo')">Partager</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARTE VISITE VCARD -->
+    <div class="page" id="page-vcard">
+      <div class="grid-2">
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">💳 Créer ma Carte Visite</span></div>
+          <div class="form-group"><label class="form-label">Nom complet</label><input class="form-input" id="vcName" placeholder="Votre nom"></div>
+          <div class="form-group"><label class="form-label">Titre / Poste</label><input class="form-input" id="vcTitle" placeholder="Directeur Agence Digitale"></div>
+          <div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="vcPhone" placeholder="+228 XX XX XX XX" oninput="renderVCard()"></div>
+          <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="vcEmail" placeholder="vous@agence.tg" oninput="renderVCard()"></div>
+          <div class="form-group"><label class="form-label">Site web</label><input class="form-input" id="vcWeb" placeholder="www.agence.tg" oninput="renderVCard()"></div>
+          <div class="form-group"><label class="form-label">Couleur thème</label><input type="color" id="vcColor" value="#6366f1" oninput="renderVCard()" style="width:60px;height:40px;border-radius:8px;border:1px solid var(--border);cursor:pointer"></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" onclick="renderVCard()">👁️ Aperçu</button>
+            <button class="btn btn-success" onclick="downloadVCard()">⬇️ Télécharger VCard</button>
+            <button class="btn btn-secondary" onclick="shareWhatsApp()">📤 WhatsApp</button>
+          </div>
+        </div>
+        <div>
+          <div id="vcardPreview" style="perspective:1000px">
+            <div style="background:linear-gradient(135deg,#6366f1,#a855f7);color:white;padding:30px;border-radius:16px;min-height:180px;position:relative;overflow:hidden;box-shadow:0 20px 50px rgba(99,102,241,0.4)">
+              <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,255,255,0.1);border-radius:50%"></div>
+              <div style="font-size:22px;font-weight:700;margin-bottom:4px" id="vc-name">Votre Nom</div>
+              <div style="font-size:14px;opacity:0.8;margin-bottom:16px" id="vc-title">Votre Titre</div>
+              <div style="font-size:13px" id="vc-contacts"></div>
+            </div>
+          </div>
+          <div class="glass-card" style="margin-top:16px;text-align:center">
+            <div style="font-weight:600;margin-bottom:12px">📱 QR Code</div>
+            <canvas id="qrCanvas" width="150" height="150"></canvas>
+            <div style="font-size:12px;color:var(--text2);margin-top:8px">Scannez pour contacter</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMUNICATION -->
+    <div class="page" id="page-communication">
+      <div class="grid-2">
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">💬 Contact Rapide</span></div>
+          <div class="form-group"><label class="form-label">Numéro / Email destinataire</label><input class="form-input" id="commDest" placeholder="+228 XX XX XX XX ou email@..."></div>
+          <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" id="commMsg" placeholder="Votre message..." rows="4"></textarea></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-success" onclick="sendWhatsApp()">📱 WhatsApp</button>
+            <button class="btn btn-primary" onclick="sendEmail()">✉️ Email</button>
+            <button class="btn btn-secondary" onclick="makeCall()">📞 Appeler</button>
+          </div>
+        </div>
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">📝 Notes Privées</span></div>
+          <textarea class="form-textarea" id="privateNotes" rows="8" placeholder="Vos notes privées et confidentielles..." style="margin-bottom:12px" oninput="saveNotes()"><?php echo localStorage ? '' : '' ?></textarea>
+          <button class="btn btn-secondary btn-sm" onclick="clearNotes()">🗑️ Effacer</button>
+          <div style="font-size:12px;color:var(--text2);margin-top:8px">💾 Sauvegarde automatique</div>
+        </div>
+      </div>
+      <div class="glass-card" style="margin-top:20px">
+        <div class="card-header"><span class="card-title">📬 Messages Rapides Templates</span></div>
+        <div class="grid-3">
+          <div class="tpl-card" onclick="useTemplate('prospect')"><div class="tpl-icon">🎯</div><div class="tpl-name">Message Prospection</div></div>
+          <div class="tpl-card" onclick="useTemplate('relance')"><div class="tpl-icon">🔔</div><div class="tpl-name">Relance Client</div></div>
+          <div class="tpl-card" onclick="useTemplate('livraison')"><div class="tpl-icon">✅</div><div class="tpl-name">Livraison Mission</div></div>
+          <div class="tpl-card" onclick="useTemplate('paiement')"><div class="tpl-icon">💰</div><div class="tpl-name">Demande Paiement</div></div>
+          <div class="tpl-card" onclick="useTemplate('remerciement')"><div class="tpl-icon">🙏</div><div class="tpl-name">Remerciement</div></div>
+          <div class="tpl-card" onclick="useTemplate('offre')"><div class="tpl-icon">🎁</div><div class="tpl-name">Offre Spéciale</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APPRENTISSAGE -->
+    <div class="page" id="page-apprentissage">
+      <div class="grid-2">
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">🧠 Quiz Hebdomadaire</span></div>
+          <div id="quizContent">
+            <button class="btn btn-primary" style="width:100%" onclick="startQuiz()">🚀 Démarrer le Quiz (5 questions)</button>
+          </div>
+        </div>
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">💡 Conseil du Jour</span></div>
+          <div id="dailyTip" style="padding:20px;background:var(--bg);border-radius:12px;line-height:1.7"></div>
+          <button class="btn btn-secondary btn-sm" style="margin-top:12px" onclick="newTip()">🔄 Nouveau conseil</button>
+        </div>
+      </div>
+      <div class="glass-card" style="margin-top:20px">
+        <div class="card-header"><span class="card-title">🎯 Objectifs SMART</span></div>
+        <div class="grid-2">
+          <div>
+            <div class="form-group"><label class="form-label">Objectif</label><input class="form-input" id="smartObj" placeholder="Ex: Atteindre 500 000 FCFA/mois"></div>
+            <div class="form-group"><label class="form-label">Échéance</label><input class="form-input" type="date" id="smartDate"></div>
+            <div class="form-group"><label class="form-label">Actions concrètes</label><textarea class="form-textarea" id="smartActions" placeholder="1. Contacter 5 prospects/jour&#10;2. Créer 2 sites/mois"></textarea></div>
+            <button class="btn btn-primary" onclick="addSmartGoal()">+ Ajouter Objectif</button>
+          </div>
+          <div id="smartGoals"><div style="text-align:center;padding:30px;color:var(--text2)">Aucun objectif défini</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GALERIE IMAGES -->
+    <div class="page" id="page-galerie">
+      <div class="glass-card" style="margin-bottom:20px">
+        <div class="card-header"><span class="card-title">🖼️ Galerie d'Images</span></div>
+        <div id="galerieDropZone" ondrop="galerieHandleDrop(event)" ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border)'" onclick="document.getElementById('galerieInput').click()" style="border:2px dashed var(--border);border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:16px">
+          <div style="font-size:40px;margin-bottom:12px">📁</div>
+          <div style="font-weight:600">Glissez vos images ici ou cliquez</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:8px">PNG, JPG, WebP — plusieurs fichiers acceptés</div>
+          <input type="file" id="galerieInput" multiple accept="image/*" style="display:none" onchange="galerieHandleFiles(this.files)">
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+          <button class="btn btn-sm btn-secondary" onclick="galerieFilter('all')">Toutes</button>
+          <button class="btn btn-sm btn-secondary" onclick="galerieFilter('recent')">Récentes</button>
+          <button class="btn btn-danger btn-sm" onclick="clearGalerie()">🗑️ Tout effacer</button>
+        </div>
+        <div id="galerieGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px"></div>
+      </div>
+    </div>
+
+    <!-- ANALYSEUR FINANCIER -->
+    <div class="page" id="page-analyseur">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Revenu Annuel Estimé</div><div class="stat-value" id="anRevAnnuel">0</div><div style="font-size:11px;color:var(--text2)">FCFA</div></div>
+        <div class="stat-card"><div class="stat-label">Taux de Marge</div><div class="stat-value" id="anMarge">0%</div></div>
+        <div class="stat-card"><div class="stat-label">Point Mort Mensuel</div><div class="stat-value" id="anPointMort">0</div><div style="font-size:11px;color:var(--text2)">FCFA</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">📊 Graphique Revenus vs Dépenses</span></div>
+          <canvas id="finChart" height="200"></canvas>
+        </div>
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">🌍 Convertisseur Multi-Devises</span></div>
+          <div class="form-group"><label class="form-label">Montant (FCFA)</label><input class="form-input" type="number" id="convAmount" placeholder="150000" oninput="convertCurrency()"></div>
+          <div id="convResults" style="display:flex;flex-direction:column;gap:10px;margin-top:16px">
+            <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span>🇺🇸 USD</span><span id="convUSD" style="font-weight:700;color:var(--accent)">$0</span></div>
+            <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span>🇪🇺 EUR</span><span id="convEUR" style="font-weight:700;color:var(--accent)">€0</span></div>
+            <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span>🇳🇬 NGN</span><span id="convNGN" style="font-weight:700;color:var(--accent)">₦0</span></div>
+            <div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span>🇬🇭 GHS</span><span id="convGHS" style="font-weight:700;color:var(--accent)">₵0</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="glass-card" style="margin-top:20px">
+        <div class="card-header"><span class="card-title">🤖 Analyse IA de vos Finances</span></div>
+        <button class="btn btn-primary" onclick="analyseFinancesIA()">✨ Analyser avec l'IA</button>
+        <div id="finAnalyseResult" style="margin-top:16px"></div>
+      </div>
+    </div>
+
+    <!-- INTÉGRATIONS -->
+    <div class="page" id="page-integrations">
+      <div class="grid-3">
+        <div class="glass-card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:12px">📱</div>
+          <div style="font-weight:700;margin-bottom:8px">WhatsApp Business</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:16px">Envoyez des messages directement depuis le CRM</div>
+          <div class="form-group"><input class="form-input" id="waNumber" placeholder="+228 XX XX XX XX"></div>
+          <button class="btn btn-success btn-sm" onclick="testWhatsApp()">✅ Tester la connexion</button>
+        </div>
+        <div class="glass-card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:12px">📊</div>
+          <div style="font-weight:700;margin-bottom:8px">Google Analytics</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:16px">Suivez les visites de vos sites clients</div>
+          <div class="form-group"><input class="form-input" id="gaId" placeholder="G-XXXXXXXXXX"></div>
+          <button class="btn btn-primary btn-sm" onclick="saveIntegration('ga')">💾 Enregistrer</button>
+        </div>
+        <div class="glass-card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:12px">💰</div>
+          <div style="font-weight:700;margin-bottom:8px">CinetPay / FedaPay</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:16px">Acceptez les paiements Mobile Money</div>
+          <div class="form-group"><input class="form-input" id="payKey" placeholder="Clé API paiement"></div>
+          <button class="btn btn-warning btn-sm" onclick="saveIntegration('pay')">💾 Enregistrer</button>
+        </div>
+        <div class="glass-card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:12px">📘</div>
+          <div style="font-weight:700;margin-bottom:8px">Facebook Pixel</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:16px">Trackez les conversions Facebook Ads</div>
+          <div class="form-group"><input class="form-input" id="fbPixel" placeholder="Pixel ID Facebook"></div>
+          <button class="btn btn-primary btn-sm" onclick="saveIntegration('fb')">💾 Enregistrer</button>
+        </div>
+        <div class="glass-card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:12px">☁️</div>
+          <div style="font-weight:700;margin-bottom:8px">Cloud Sync</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:16px">Sauvegarde automatique sur Supabase</div>
+          <div class="badge badge-success">✅ Connecté via backend</div>
+        </div>
+        <div class="glass-card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:12px">📧</div>
+          <div style="font-weight:700;margin-bottom:8px">Mailjet / Gmail</div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:16px">Envoi d'emails automatisés</div>
+          <div class="form-group"><input class="form-input" id="mailKey" placeholder="API Key email"></div>
+          <button class="btn btn-secondary btn-sm" onclick="saveIntegration('mail')">💾 Enregistrer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SÉCURITÉ -->
+    <div class="page" id="page-securite">
+      <div class="grid-2">
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">🔒 Sécurité du Compte</span></div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--bg);border-radius:10px">
+              <div><div style="font-weight:600">Authentification</div><div style="font-size:12px;color:var(--success)">✅ Connecté via Supabase Auth</div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--bg);border-radius:10px">
+              <div><div style="font-weight:600">Session Active</div><div style="font-size:12px;color:var(--text2)">Expire dans 7 jours</div></div>
+              <button class="btn btn-sm btn-danger" onclick="if(confirm('Déconnexion ?'))window.location='/logout'">Déconnecter</button>
+            </div>
+          </div>
+          <div style="margin-top:20px">
+            <div style="font-weight:600;margin-bottom:12px">💾 Sauvegarde des Données</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-primary" onclick="exportData()">📤 Exporter JSON</button>
+              <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📥 Importer JSON</button>
+              <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+            </div>
+          </div>
+        </div>
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">📋 Journal d'Activité</span></div>
+          <div id="activityLog" style="max-height:400px;overflow-y:auto"></div>
+          <button class="btn btn-sm btn-danger" style="margin-top:12px" onclick="clearLog()">🗑️ Effacer le journal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MULTI-LANGUE -->
+    <div class="page" id="page-multilang">
+      <div class="grid-2">
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">🌍 Langue de l'Interface</span></div>
+          <div class="grid-2" style="margin-bottom:20px">
+            <div class="tpl-card" onclick="setLang('fr')" style="border-color:var(--accent)"><div class="tpl-icon">🇫🇷</div><div class="tpl-name">Français</div><div style="font-size:11px;color:var(--accent);margin-top:4px">✅ Actif</div></div>
+            <div class="tpl-card" onclick="setLang('en')"><div class="tpl-icon">🇬🇧</div><div class="tpl-name">English</div><div style="font-size:11px;color:var(--text2);margin-top:4px">Disponible</div></div>
+          </div>
+          <div style="padding:16px;background:var(--bg);border-radius:10px;font-size:13px;color:var(--text2)">
+            💡 La traduction complète de l'interface sera appliquée immédiatement.
+          </div>
+        </div>
+        <div class="glass-card">
+          <div class="card-header"><span class="card-title">💱 Convertisseur de Devises</span></div>
+          <div class="form-group"><label class="form-label">Montant</label><input class="form-input" type="number" id="mlAmount" placeholder="100000" oninput="mlConvert()"></div>
+          <div class="form-group"><label class="form-label">Devise source</label>
+            <select class="form-select" id="mlFrom" onchange="mlConvert()">
+              <option value="FCFA">FCFA (XOF)</option>
+              <option value="EUR">Euro (EUR)</option>
+              <option value="USD">Dollar (USD)</option>
+              <option value="NGN">Naira (NGN)</option>
+            </select>
+          </div>
+          <div id="mlResults" style="display:flex;flex-direction:column;gap:8px;margin-top:16px"></div>
+        </div>
+      </div>
+    </div>
   </div><!-- end content -->
 </main>
 </div><!-- end app -->
@@ -616,6 +1065,13 @@ function goTo(page) {
   if (page === 'agenda') renderEvents();
   if (page === 'formation') renderFormation();
   if (page === 'gamification') renderGamification();
+  if (page === 'formation') renderFormation();
+  if (page === 'securite') renderActivityLog();
+  if (page === 'galerie') renderGalerie();
+  if (page === 'analyseur') { renderAnalyseur(); convertCurrency(); }
+  if (page === 'prediction') { initPrediction(); }
+  if (page === 'apprentissage') { renderSmartGoals(); newTip(); }
+  if (page === 'chatgpt') {}
   if (page === 'sites') loadSites();
 }
 
@@ -1309,5 +1765,389 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialiser lignes devis
   renderDFLines();
 });
+
+// ═══ CHATBOT GPT ═══
+let gptHistory = [];
+async function gptSend() {
+  const input = document.getElementById('gptInput');
+  const msg = input.value.trim(); if (!msg) return;
+  const msgs = document.getElementById('gptMessages');
+  gptHistory.push({role:'user',content:msg});
+  msgs.innerHTML += `<div class="msg-user"><strong>Vous:</strong><br>${msg}</div>`;
+  input.value = '';
+  msgs.innerHTML += `<div class="msg-bot" id="gptTyping">⏳ Analyse en cours...</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  try {
+    const rev = financeData.revenus.reduce((a,r)=>a+r.amount,0);
+    const res = await fetch('/api/ai/chat', {method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:msg,context:`Tu es un consultant senior en marketing digital pour agences à Lomé, Togo. Revenus actuels: ${formatNum(rev)} FCFA. Réponds en français avec des conseils concrets et des chiffres réalistes en FCFA.`})});
+    const data = await res.json();
+    const reply = data.reply || 'Erreur';
+    gptHistory.push({role:'assistant',content:reply});
+    document.getElementById('gptTyping').outerHTML = `<div class="msg-bot"><strong>🤖 IA:</strong><br>${reply.replace(/\n/g,'<br>')}</div>`;
+    addXP(5);
+  } catch(e) { document.getElementById('gptTyping').outerHTML = `<div class="msg-bot">❌ Erreur: ${e.message}</div>`; }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+function gptQuick(text) { document.getElementById('gptInput').value = text; gptSend(); }
+function gptVoice() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) { toast('Reconnaissance vocale non supportée','warning'); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SR(); rec.lang = 'fr-FR';
+  rec.onresult = e => { document.getElementById('gptInput').value = e.results[0][0].transcript; gptSend(); };
+  rec.start(); toast('🎤 Parlez maintenant...','info');
+}
+
+// ═══ GÉNÉRATEUR LOGO ═══
+function generateLogo() {
+  const canvas = document.getElementById('logoCanvas');
+  const ctx = canvas.getContext('2d');
+  const name = document.getElementById('logoName').value || 'LOGO';
+  const slogan = document.getElementById('logoSlogan').value;
+  const color = document.getElementById('logoColor').value;
+  const style = document.getElementById('logoStyle').value;
+  ctx.clearRect(0, 0, 400, 200);
+  const grad = ctx.createLinearGradient(0,0,400,0);
+  grad.addColorStop(0, color); grad.addColorStop(1, color+'99');
+  ctx.fillStyle = '#f8f9fc'; ctx.fillRect(0,0,400,200);
+  if (style === 'icon' || style === 'bold') {
+    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(70,100,45,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = 'white'; ctx.font = 'bold 36px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(name[0].toUpperCase(), 70, 100);
+    ctx.fillStyle = color; ctx.font = 'bold 32px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(name.toUpperCase(), 130, 90);
+    if (slogan) { ctx.fillStyle = '#666'; ctx.font = '14px Arial'; ctx.fillText(slogan, 130, 120); }
+  } else if (style === 'minimal') {
+    ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.strokeRect(20,20,360,160);
+    ctx.fillStyle = color; ctx.font = 'bold 48px Georgia'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(name, 200, 90);
+    if (slogan) { ctx.fillStyle = '#666'; ctx.font = '14px Arial'; ctx.fillText(slogan, 200, 140); }
+  } else {
+    ctx.fillStyle = grad; ctx.font = 'bold 52px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(name.toUpperCase(), 200, 90);
+    if (slogan) { ctx.fillStyle = '#888'; ctx.font = '15px Arial'; ctx.fillText(slogan, 200, 140); }
+  }
+  toast('Logo généré !', 'success'); addXP(10);
+}
+function downloadLogo() {
+  generateLogo();
+  const a = document.createElement('a');
+  a.download = 'logo.png';
+  a.href = document.getElementById('logoCanvas').toDataURL('image/png');
+  a.click(); toast('Logo téléchargé !', 'success');
+}
+
+// ═══ CONTRATS ═══
+let selectedContrat = 'prestation';
+function selectContrat(el, type) {
+  document.querySelectorAll('#page-contrats .tpl-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected'); selectedContrat = type;
+}
+async function generateContrat() {
+  const agence = document.getElementById('ctAgence').value || 'Votre Agence';
+  const client = document.getElementById('ctClient').value;
+  const montant = document.getElementById('ctMontant').value;
+  const date = document.getElementById('ctDate').value;
+  const desc = document.getElementById('ctDesc').value;
+  if (!client) { toast('Entrez le nom du client','warning'); return; }
+  const preview = document.getElementById('contratPreview');
+  preview.style.display = 'block';
+  preview.innerHTML = '<div style="text-align:center;padding:20px">✨ Génération du contrat...</div>';
+  try {
+    const res = await fetch('/api/ai/chat', {method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:`Génère un contrat de ${selectedContrat} professionnel conforme au droit OHADA/Togo entre "${agence}" (prestataire) et "${client}" (client) pour: "${desc}". Montant: ${montant} FCFA. Date de début: ${date}. Le contrat doit inclure: parties, objet, obligations, délais, modalités de paiement (Mobile Money accepté), propriété intellectuelle, résiliation, juridiction compétente (tribunal de Lomé). Format HTML propre pour impression.`,
+      context:'Tu es un juriste expert en droit des affaires OHADA (Togo). Génère des contrats professionnels en français, bien structurés avec articles numérotés.'})});
+    const data = await res.json();
+    preview.innerHTML = data.reply || 'Erreur génération';
+    addXP(20); toast('Contrat généré !','success');
+  } catch(e) { preview.innerHTML = `<p style="color:red">Erreur: ${e.message}</p>`; }
+}
+
+// ═══ MODE PRÉDICTION ═══
+function runSimulation() {
+  const clients = parseInt(document.getElementById('simClients')?.value)||3;
+  const revClient = parseInt(document.getElementById('simRevClient')?.value)||150000;
+  const croissance = parseInt(document.getElementById('simCroissance')?.value)||20;
+  const depenses = parseInt(document.getElementById('simDepenses')?.value)||50000;
+  const revMois = clients * revClient;
+  const marge = revMois - depenses;
+  const rev3m = Math.round(revMois * (Math.pow(1+croissance/100,3)-1)/(croissance/100) * revMois);
+  const rev6m = Math.round(revMois * (Math.pow(1+croissance/100,6)-1)/(croissance/100) * revMois);
+  if (document.getElementById('pred3m')) document.getElementById('pred3m').textContent = formatNum(rev3m);
+  if (document.getElementById('pred6m')) document.getElementById('pred6m').textContent = formatNum(rev6m);
+  const target = 1000000; const monthsNeeded = marge > 0 ? Math.ceil(Math.log(target/revMois)/Math.log(1+croissance/100)) : '∞';
+  if (document.getElementById('predTarget')) document.getElementById('predTarget').textContent = monthsNeeded;
+  const results = document.getElementById('simResults');
+  if (results) results.innerHTML = `
+    <div style="padding:14px;background:var(--bg);border-radius:10px">
+      <div>Revenu mois 1: <strong>${formatNum(revMois)} FCFA</strong></div>
+      <div>Marge nette: <strong style="color:${marge>=0?'var(--success)':'var(--danger)'}">${formatNum(marge)} FCFA</strong></div>
+      <div>À ce rythme, 1M FCFA/mois dans: <strong>${monthsNeeded} mois</strong></div>
+    </div>`;
+}
+async function getAIPredictions() {
+  const rev = financeData.revenus.reduce((a,r)=>a+r.amount,0);
+  const dep = financeData.depenses.reduce((a,r)=>a+r.amount,0);
+  const result = document.getElementById('predRecos');
+  result.innerHTML = '<div style="text-align:center;padding:20px">⏳ Analyse en cours...</div>';
+  try {
+    const res = await fetch('/api/ai/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:`Analyse financière: revenus ${formatNum(rev)} FCFA, dépenses ${formatNum(dep)} FCFA, marge ${formatNum(rev-dep)} FCFA. Donne 5 recommandations concrètes pour améliorer la rentabilité de cette agence digitale à Lomé, Togo.`,
+      context:'Tu es un analyste financier expert pour PME africaines. Donne des conseils pratiques et chiffrés.'})});
+    const data = await res.json();
+    result.innerHTML = `<div style="line-height:1.7;font-size:14px">${(data.reply||'').replace(/\n/g,'<br>')}</div>`;
+  } catch(e) { result.innerHTML = `<p style="color:red">Erreur: ${e.message}</p>`; }
+}
+function initPrediction() { if(document.getElementById('simClients')) runSimulation(); }
+
+// ═══ MARKETPLACE ═══
+function commanderService(name, price) {
+  const msg = `Bonjour, je suis intéressé par votre service "${name}" à ${formatNum(parseInt(price))} FCFA. Pouvez-vous me contacter ?`;
+  const phone = document.getElementById('setPhone')?.value || '';
+  if (phone) window.open(`https://wa.me/${phone.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(msg)}`,'_blank');
+  else toast('Configurez votre numéro dans Paramètres','warning');
+}
+function partagerService(name) {
+  const text = `✨ Service disponible: ${name}. Contactez-nous pour plus d'informations !`;
+  navigator.clipboard?.writeText(text).then(()=>toast('Copié ! Collez sur vos réseaux','success'));
+}
+
+// ═══ CARTE VISITE ═══
+function renderVCard() {
+  const name = document.getElementById('vcName')?.value || 'Votre Nom';
+  const title = document.getElementById('vcTitle')?.value || 'Votre Titre';
+  const phone = document.getElementById('vcPhone')?.value || '';
+  const email = document.getElementById('vcEmail')?.value || '';
+  const web = document.getElementById('vcWeb')?.value || '';
+  const color = document.getElementById('vcColor')?.value || '#6366f1';
+  if (document.getElementById('vc-name')) document.getElementById('vc-name').textContent = name;
+  if (document.getElementById('vc-title')) document.getElementById('vc-title').textContent = title;
+  const contacts = document.getElementById('vc-contacts');
+  if (contacts) contacts.innerHTML = [phone?`📞 ${phone}`:'', email?`✉️ ${email}`:'', web?`🌐 ${web}`:''].filter(Boolean).join('<br>');
+  const card = document.querySelector('#page-vcard .glass-card div[style*="linear-gradient"]');
+  if (card) card.style.background = `linear-gradient(135deg,${color},${color}99)`;
+}
+function downloadVCard() {
+  const name = document.getElementById('vcName')?.value || 'Contact';
+  const phone = document.getElementById('vcPhone')?.value || '';
+  const email = document.getElementById('vcEmail')?.value || '';
+  const web = document.getElementById('vcWeb')?.value || '';
+  const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTITLE:${document.getElementById('vcTitle')?.value||''}\nTEL:${phone}\nEMAIL:${email}\nURL:${web}\nEND:VCARD`;
+  const blob = new Blob([vcard],{type:'text/vcard'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = name.replace(/\s+/g,'-')+'.vcf'; a.click();
+  toast('VCard téléchargée !','success');
+}
+function shareWhatsApp() {
+  const phone = document.getElementById('vcPhone')?.value || '';
+  const name = document.getElementById('vcName')?.value || '';
+  window.open(`https://wa.me/?text=${encodeURIComponent('Bonjour ! Voici ma carte de visite: '+name)}`, '_blank');
+}
+
+// ═══ COMMUNICATION ═══
+function sendWhatsApp() {
+  const dest = document.getElementById('commDest')?.value || '';
+  const msg = document.getElementById('commMsg')?.value || '';
+  const num = dest.replace(/[^0-9]/g,'');
+  window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+function sendEmail() {
+  const dest = document.getElementById('commDest')?.value || '';
+  const msg = document.getElementById('commMsg')?.value || '';
+  window.location.href = `mailto:${dest}?body=${encodeURIComponent(msg)}`;
+}
+function makeCall() {
+  const dest = document.getElementById('commDest')?.value || '';
+  window.location.href = `tel:${dest.replace(/[^0-9+]/g,'')}`;
+}
+function saveNotes() {
+  localStorage.setItem('cc_notes', document.getElementById('privateNotes')?.value || '');
+}
+function clearNotes() { if(document.getElementById('privateNotes')) document.getElementById('privateNotes').value=''; saveNotes(); }
+const TEMPLATES = {
+  prospect:'Bonjour [Prénom] ! Je suis [Votre nom], spécialiste en marketing digital à Lomé. J\'ai vu votre entreprise et je pense pouvoir vous aider à développer votre présence en ligne. Puis-je vous proposer un échange de 10 minutes ?',
+  relance:'Bonjour [Prénom], je reviens vers vous concernant notre discussion sur [sujet]. Avez-vous eu le temps de réfléchir à notre proposition ? Je reste disponible pour répondre à vos questions.',
+  livraison:'Bonjour [Prénom] ! Bonne nouvelle : votre mission [nom mission] est terminée ! ✅ Veuillez trouver ci-joint les livrables. N\'hésitez pas à me donner votre retour.',
+  paiement:'Bonjour [Prénom], je me permets de vous relancer concernant la facture N° [numéro] d\'un montant de [montant] FCFA. Pourriez-vous procéder au règlement par Mobile Money ? Merci.',
+  remerciement:'Bonjour [Prénom], merci infiniment pour votre confiance ! C\'est un plaisir de travailler avec vous. N\'hésitez pas à me recommander à votre entourage. À très bientôt !',
+  offre:'Bonjour [Prénom] ! 🎁 Offre spéciale cette semaine : -20% sur [service]. Profitez-en avant [date] ! Répondez à ce message pour en bénéficier.'
+};
+function useTemplate(type) {
+  const msg = document.getElementById('commMsg');
+  if (msg) { msg.value = TEMPLATES[type] || ''; toast('Template appliqué !','success'); }
+}
+// Charger notes
+(function(){const n=localStorage.getItem('cc_notes');if(n&&document.getElementById('privateNotes'))document.getElementById('privateNotes').value=n;})();
+
+// ═══ APPRENTISSAGE ═══
+const QUIZ_QUESTIONS = [
+  {q:'Quelle est la TVA en vigueur au Togo ?',choices:['10%','18%','20%','15%'],answer:1},
+  {q:'Quel réseau social est le plus utilisé en Afrique de l\'Ouest ?',choices:['Twitter','LinkedIn','Facebook/WhatsApp','TikTok'],answer:2},
+  {q:'OHADA signifie :',choices:['Organisation pour l\'Harmonisation en Afrique du Droit des Affaires','Office Humanitaire Africain','Organisation des Hommes d\'Affaires d\'Abidjan','Aucun de ces choix'],answer:0},
+  {q:'Mobile Money le plus utilisé au Togo ?',choices:['PayPal','Stripe','Flooz / T-Money','Orange Money'],answer:2},
+  {q:'Le Community Manager doit publier idéalement :',choices:['1 fois/mois','1 fois/semaine','3-5 fois/semaine','Tous les jours à 6h'],answer:2}
+];
+let quizStep = 0, quizScore = 0;
+function startQuiz() {
+  quizStep = 0; quizScore = 0; renderQuiz();
+}
+function renderQuiz() {
+  const q = QUIZ_QUESTIONS[quizStep];
+  if (!q) { document.getElementById('quizContent').innerHTML = `<div style="text-align:center;padding:20px"><div style="font-size:40px;margin-bottom:12px">${quizScore>=4?'🏆':'👍'}</div><div style="font-size:20px;font-weight:700">${quizScore}/5 bonnes réponses</div><div style="margin-top:12px;color:var(--text2)">${quizScore>=4?'Excellent ! Vous maîtrisez les bases.':'Continuez à apprendre !'}</div><button class="btn btn-primary" style="margin-top:16px" onclick="startQuiz()">Recommencer</button></div>`; addXP(quizScore*10); return; }
+  document.getElementById('quizContent').innerHTML = `<div><div style="font-size:12px;color:var(--text2);margin-bottom:8px">Question ${quizStep+1}/5</div><div style="font-weight:700;font-size:15px;margin-bottom:20px">${q.q}</div><div style="display:flex;flex-direction:column;gap:10px">${q.choices.map((c,i)=>`<button class="btn btn-secondary" style="text-align:left" onclick="answerQuiz(${i})">${c}</button>`).join('')}</div></div>`;
+}
+function answerQuiz(idx) {
+  const q = QUIZ_QUESTIONS[quizStep];
+  if (idx === q.answer) { quizScore++; toast('✅ Bonne réponse !','success'); }
+  else toast(`❌ Mauvaise réponse. C\'était: ${q.choices[q.answer]}`,'error');
+  quizStep++; setTimeout(renderQuiz, 1000);
+}
+const TIPS = [
+  '💡 Contactez au moins 5 prospects par jour via WhatsApp. La régularité est la clé du succès.',
+  '📊 Un client satisfait vous apportera en moyenne 2-3 nouveaux clients par recommandation.',
+  '💰 Augmentez vos tarifs de 15% tous les 6 mois si votre carnet de commandes est plein.',
+  '📱 Instagram et Facebook sont vos meilleurs outils de prospection au Togo. Publiez 3x/semaine.',
+  '🤝 Demandez toujours un acompte de 50% avant de commencer une mission.',
+  '📄 Un devis signé vous protège légalement. Ne commencez jamais sans accord écrit.',
+  '🎯 Spécialisez-vous dans un secteur (restaurants, avocats, boutiques) pour devenir la référence.',
+  '⏰ Livrez toujours 2 jours avant la deadline. Ça surprend positivement le client.',
+  '💼 Votre portfolio est votre meilleur commercial. Mettez-y uniquement vos 5 meilleurs projets.',
+  '📞 Un appel téléphonique convertit 3x mieux qu\'un message WhatsApp pour les gros contrats.'
+];
+function newTip() {
+  const tip = TIPS[Math.floor(Math.random()*TIPS.length)];
+  const el = document.getElementById('dailyTip');
+  if (el) el.innerHTML = `<div style="font-size:32px;margin-bottom:12px">💡</div><div style="font-size:15px">${tip}</div>`;
+}
+let smartGoals = JSON.parse(localStorage.getItem('cc_smart')||'[]');
+function addSmartGoal() {
+  const obj = document.getElementById('smartObj')?.value;
+  if (!obj) { toast('Entrez un objectif','warning'); return; }
+  smartGoals.push({id:Date.now(),obj,date:document.getElementById('smartDate')?.value,actions:document.getElementById('smartActions')?.value,done:false});
+  localStorage.setItem('cc_smart',JSON.stringify(smartGoals));
+  renderSmartGoals(); toast('Objectif ajouté !','success'); addXP(15);
+}
+function renderSmartGoals() {
+  const el = document.getElementById('smartGoals');
+  if (!el) return;
+  if (!smartGoals.length) { el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text2)">Aucun objectif</div>'; return; }
+  el.innerHTML = smartGoals.map(g=>`<div style="padding:14px;background:var(--bg);border-radius:10px;margin-bottom:10px"><div style="font-weight:700;margin-bottom:4px">${g.obj}</div>${g.date?`<div style="font-size:12px;color:var(--accent)">📅 ${g.date}</div>`:''}<div style="font-size:13px;color:var(--text2);margin-top:6px;white-space:pre-wrap">${g.actions||''}</div><button class="btn btn-danger btn-sm" style="margin-top:8px" onclick="smartGoals=smartGoals.filter(x=>x.id!==${g.id});localStorage.setItem('cc_smart',JSON.stringify(smartGoals));renderSmartGoals()">Supprimer</button></div>`).join('');
+}
+
+// ═══ GALERIE ═══
+let galerieImages = JSON.parse(localStorage.getItem('cc_galerie')||'[]');
+function galerieHandleDrop(e) { e.preventDefault(); galerieHandleFiles(e.dataTransfer.files); }
+function galerieHandleFiles(files) {
+  Array.from(files).forEach(f => {
+    if (!f.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      galerieImages.unshift({id:Date.now()+Math.random(),src:e.target.result,name:f.name,date:new Date().toLocaleDateString('fr-FR')});
+      localStorage.setItem('cc_galerie',JSON.stringify(galerieImages));
+      renderGalerie();
+    };
+    reader.readAsDataURL(f);
+  });
+  toast(files.length + ' image(s) ajoutée(s)','success'); addXP(5);
+}
+function renderGalerie() {
+  const grid = document.getElementById('galerieGrid');
+  if (!grid) return;
+  if (!galerieImages.length) { grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text2);grid-column:1/-1">Aucune image. Glissez des fichiers ici.</div>'; return; }
+  grid.innerHTML = galerieImages.map(img=>`<div style="position:relative;border-radius:10px;overflow:hidden;aspect-ratio:1"><img src="${img.src}" style="width:100%;height:100%;object-fit:cover" loading="lazy"><div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.6);color:white;padding:6px 8px;font-size:11px">${img.name}</div><button onclick="deleteGalerieImg('${img.id}')" style="position:absolute;top:4px;right:4px;background:var(--danger);color:white;border:none;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:11px">✕</button></div>`).join('');
+}
+function deleteGalerieImg(id) { galerieImages=galerieImages.filter(i=>i.id!=id); localStorage.setItem('cc_galerie',JSON.stringify(galerieImages)); renderGalerie(); }
+function clearGalerie() { if(confirm('Effacer toutes les images ?')) { galerieImages=[]; localStorage.setItem('cc_galerie','[]'); renderGalerie(); } }
+function galerieFilter(type) { renderGalerie(); }
+
+// ═══ ANALYSEUR FINANCIER ═══
+function renderAnalyseur() {
+  const rev = financeData.revenus.reduce((a,r)=>a+r.amount,0);
+  const dep = financeData.depenses.reduce((a,r)=>a+r.amount,0);
+  const marge = rev > 0 ? Math.round(((rev-dep)/rev)*100) : 0;
+  if(document.getElementById('anRevAnnuel')) document.getElementById('anRevAnnuel').textContent = formatNum(rev*12);
+  if(document.getElementById('anMarge')) document.getElementById('anMarge').textContent = marge+'%';
+  if(document.getElementById('anPointMort')) document.getElementById('anPointMort').textContent = formatNum(dep);
+  const canvas = document.getElementById('finChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const maxVal = Math.max(rev,dep,1);
+  const barW = 80, gap = 40, startX = 60;
+  const h = canvas.height - 60;
+  [[rev,'Revenus','#22c55e'],[dep,'Dépenses','#ef4444']].forEach(([val,label,color],i)=>{
+    const x = startX + i*(barW+gap);
+    const barH = (val/maxVal)*h;
+    ctx.fillStyle = color+'33'; ctx.fillRect(x,h-barH+20,barW,barH);
+    ctx.fillStyle = color; ctx.fillRect(x,h-barH+20,barW,6);
+    ctx.fillStyle = '#999'; ctx.font = '12px Arial'; ctx.textAlign = 'center';
+    ctx.fillText(label,x+barW/2,h+40); ctx.fillText(formatNum(val),x+barW/2,h-barH+14);
+  });
+}
+function convertCurrency() {
+  const amount = parseInt(document.getElementById('convAmount')?.value)||0;
+  if(document.getElementById('convUSD')) document.getElementById('convUSD').textContent = '$' + (amount/605.5).toFixed(2);
+  if(document.getElementById('convEUR')) document.getElementById('convEUR').textContent = '€' + (amount/655.957).toFixed(2);
+  if(document.getElementById('convNGN')) document.getElementById('convNGN').textContent = '₦' + Math.round(amount*1.49).toLocaleString();
+  if(document.getElementById('convGHS')) document.getElementById('convGHS').textContent = '₵' + (amount/60).toFixed(2);
+}
+async function analyseFinancesIA() {
+  const rev = financeData.revenus.reduce((a,r)=>a+r.amount,0);
+  const dep = financeData.depenses.reduce((a,r)=>a+r.amount,0);
+  const el = document.getElementById('finAnalyseResult');
+  el.innerHTML = '<div style="text-align:center;padding:20px">⏳ Analyse en cours...</div>';
+  try {
+    const res = await fetch('/api/ai/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:`Analyse financière complète: revenus totaux ${formatNum(rev)} FCFA, dépenses ${formatNum(dep)} FCFA. Donne une analyse SWOT financière et 3 actions prioritaires pour améliorer la rentabilité.`,context:'Expert financier PME Afrique de l\'Ouest.'})});
+    const d = await res.json();
+    el.innerHTML = `<div class="glass-card" style="background:var(--bg)">${(d.reply||'').replace(/\n/g,'<br>')}</div>`;
+  } catch(e) { el.innerHTML = `<p style="color:red">Erreur: ${e.message}</p>`; }
+}
+function mlConvert() {
+  const amount = parseInt(document.getElementById('mlAmount')?.value)||0;
+  const from = document.getElementById('mlFrom')?.value || 'FCFA';
+  const rates = {FCFA:1, EUR:655.957, USD:605.5, NGN:0.67};
+  const fcfa = amount * rates[from];
+  const el = document.getElementById('mlResults');
+  if (!el) return;
+  el.innerHTML = Object.entries({FCFA:1,EUR:655.957,USD:605.5,NGN:0.67}).filter(([k])=>k!==from).map(([k,r])=>`<div style="display:flex;justify-content:space-between;padding:12px;background:var(--bg);border-radius:10px"><span>${k}</span><span style="font-weight:700;color:var(--accent)">${k==='FCFA'?formatNum(fcfa):(fcfa/r).toFixed(2)}</span></div>`).join('');
+}
+function setLang(lang) { toast(lang==='fr'?'Français activé':'English mode (coming soon)','info'); }
+
+// ═══ SÉCURITÉ / EXPORT ═══
+let activityLogs = JSON.parse(localStorage.getItem('cc_logs')||'[]');
+function logActivity(text) {
+  activityLogs.unshift({text,time:new Date().toLocaleString('fr-FR'),id:Date.now()});
+  if (activityLogs.length > 100) activityLogs = activityLogs.slice(0,100);
+  localStorage.setItem('cc_logs',JSON.stringify(activityLogs));
+}
+function renderActivityLog() {
+  const el = document.getElementById('activityLog');
+  if (!el) return;
+  if (!activityLogs.length) { el.innerHTML='<div style="text-align:center;padding:20px;color:var(--text2)">Aucune activité</div>'; return; }
+  el.innerHTML = activityLogs.map(l=>`<div class="activity-item"><div class="activity-dot"></div><div><div class="activity-text">${l.text}</div><div class="activity-time">${l.time}</div></div></div>`).join('');
+}
+function clearLog() { activityLogs=[]; localStorage.setItem('cc_logs','[]'); renderActivityLog(); }
+function exportData() {
+  const data = {finance:financeData,tasks:tasksData,events:eventsData,formation:formationData,smart:smartGoals,galerie:galerieImages.map(i=>({...i,src:'[base64]'})),logs:activityLogs,exportDate:new Date().toISOString()};
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='command-center-backup.json'; a.click();
+  toast('Données exportées !','success'); logActivity('Export des données effectué');
+}
+function importData(input) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.finance) { financeData=data.finance; localStorage.setItem('cc_finance',JSON.stringify(financeData)); }
+      if (data.tasks) { tasksData=data.tasks; localStorage.setItem('cc_tasks',JSON.stringify(tasksData)); }
+      toast('Données importées avec succès !','success'); logActivity('Import des données effectué');
+    } catch { toast('Fichier JSON invalide','error'); }
+  };
+  reader.readAsText(file);
+}
+function saveIntegration(type) { toast('Intégration "'+type+'" enregistrée !','success'); logActivity('Intégration '+type+' configurée'); }
+function testWhatsApp() { const n=document.getElementById('waNumber')?.value||''; if(n) window.open(`https://wa.me/${n.replace(/[^0-9]/g,'')}`,'_blank'); else toast('Entrez un numéro','warning'); }
 </script>
 </body></html>

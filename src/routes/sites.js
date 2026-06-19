@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { requireAuth } = require('../middleware/auth');
 const { TEMPLATES } = require('../services/siteTemplates');
+const { getAdminClient } = require('../supabaseClient');
 const { generateSiteContent } = require('../services/groqClient');
 const { buildSiteHtml } = require('../services/siteRenderer');
 
@@ -15,7 +16,7 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
     const content = await generateSiteContent({ businessName, niche, description, templateType: template });
     const html = buildSiteHtml({ businessName, color: color || '#4285f4', content, contact: { email, phone } });
 
-    const { data, error } = await req.supabase.from('sites').insert({
+    const { data, error } = await getAdminClient().from('sites').insert({
       agency_id: req.agencyId,
       template,
       site_name: businessName,

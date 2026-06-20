@@ -10,7 +10,9 @@ router.get('/api/clients', requireAuth, async (req, res) => {
 });
 
 router.post('/api/clients', requireAuth, async (req, res) => {
-  const { data, error } = await req.supabase.from('clients').insert({ ...req.body, agency_id: req.agencyId }).select().single();
+  const clientBody = { ...req.body };
+  delete clientBody.agency_id;
+  const { data, error } = await req.supabase.from('clients').insert({ ...clientBody, agency_id: req.agencyId }).select().single();
   if (error) return res.status(500).json({ error: error.message });
   res.json({ client: data });
 });
@@ -34,7 +36,9 @@ router.get('/api/quotes', requireAuth, async (req, res) => {
 });
 
 router.post('/api/quotes', requireAuth, async (req, res) => {
-  const { data, error } = await req.supabase.from('quotes').insert({ ...req.body, agency_id: req.agencyId }).select().single();
+  const quoteBody = { ...req.body };
+  delete quoteBody.agency_id;
+  const { data, error } = await req.supabase.from('quotes').insert({ ...quoteBody, agency_id: req.agencyId }).select().single();
   if (error) return res.status(500).json({ error: error.message });
   res.json({ quote: data });
 });
@@ -47,7 +51,9 @@ router.get('/api/sites', requireAuth, async (req, res) => {
 });
 
 router.post('/api/sites', requireAuth, async (req, res) => {
-  const { data, error } = await req.supabase.from('sites').insert({ ...req.body, agency_id: req.agencyId }).select().single();
+  const siteBody = { ...req.body };
+  delete siteBody.agency_id;
+  const { data, error } = await req.supabase.from('sites').insert({ ...siteBody, agency_id: req.agencyId }).select().single();
   if (error) return res.status(500).json({ error: error.message });
   res.json({ site: data });
 });

@@ -1174,15 +1174,12 @@ function wsPrev() {
 
 async function wsGenerate() {
   const name = document.getElementById('wsName').value;
-  const tagline = document.getElementById('wsTagline').value;
   const desc = document.getElementById('wsDesc').value;
   const phone = document.getElementById('wsPhone').value;
   const email = document.getElementById('wsEmail').value;
   const address = document.getElementById('wsAddress').value;
   const color = document.getElementById('wsColor').value;
-  const sections = Array.from(document.querySelectorAll('.ws-section:checked')).map(s=>s.value);
 
-  // Avancer vers étape 5 d'abord
   document.getElementById('wsp' + wsStep).classList.remove('active');
   document.getElementById('ws' + wsStep).classList.add('done');
   wsStep = 5;
@@ -1192,45 +1189,51 @@ async function wsGenerate() {
   document.getElementById('wsPreview').style.display = 'none';
 
   try {
-    const res = await fetch('/api/ai/generate-site', {
+    const formData = new URLSearchParams();
+    formData.append('template', wsTemplate);
+    formData.append('businessName', name);
+    formData.append('niche', wsTemplate);
+    formData.append('description', desc);
+    formData.append('color', color);
+    formData.append('email', email);
+    formData.append('phone', phone);
+    formData.append('address', address);
+
+    const res = await fetch('/sites/generate', {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ businessName: name, niche: wsTemplate, description: desc, template: wsTemplate })
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: formData.toString(),
+      redirect: 'follow'
     });
-    const data = await res.json();
-    const c = data.content || {};
 
-    const servHtml = sections.includes('services') && c.services ? c.services.map(s=>`<div style="padding:25px;background:#fff;border-radius:12px;text-align:center"><div style="font-size:36px;margin-bottom:10px">${s.icon||'⭐'}</div><h3 style="color:${color};margin-bottom:8px">${s.title}</h3><p style="color:#666">${s.desc}</p></div>`).join('') : '';
-    const testHtml = sections.includes('testimonials') && c.testimonials ? c.testimonials.map(t=>`<div style="padding:20px;background:#fff;border-radius:12px;border-left:4px solid ${color}"><p style="font-style:italic;color:#444">"${t.text}"</p><strong style="color:${color}">— ${t.name}</strong></div>`).join('') : '';
-    const faqHtml = sections.includes('faq') && c.faq ? c.faq.map(f=>`<details style="margin-bottom:10px;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden"><summary style="padding:14px;cursor:pointer;font-weight:600;background:#fff">${f.q}</summary><p style="padding:14px;background:#f8f9fa;color:#444">${f.a}</p></details>`).join('') : '';
-
-    const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name}</title></head>
-<body style="margin:0;font-family:system-ui,sans-serif;color:#333;line-height:1.6">
-<div style="background:linear-gradient(135deg,${color},${color}aa);color:white;padding:80px 20px;text-align:center"><h1 style="font-size:2.8em;margin:0 0 12px">${name}</h1><p style="font-size:1.2em;opacity:.9;margin:0 0 24px">${c.tagline||tagline}</p><a href="#contact" style="display:inline-block;padding:12px 30px;background:white;color:${color};text-decoration:none;border-radius:25px;font-weight:700">Nous contacter</a></div>
-${sections.includes('about')?`<div style="max-width:800px;margin:0 auto;padding:60px 20px;text-align:center"><h2 style="color:${color};font-size:2em;margin-bottom:20px">À propos</h2><p style="font-size:1.1em;color:#555">${c.about||desc}</p></div>`:''}
-${sections.includes('services')&&servHtml?`<div style="background:#f8f9fa;padding:60px 20px"><div style="max-width:1000px;margin:0 auto"><h2 style="text-align:center;color:${color};font-size:2em;margin-bottom:30px">Nos Services</h2><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px">${servHtml}</div></div></div>`:''}
-${sections.includes('testimonials')&&testHtml?`<div style="max-width:900px;margin:0 auto;padding:60px 20px"><h2 style="text-align:center;color:${color};font-size:2em;margin-bottom:30px">Témoignages</h2><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px">${testHtml}</div></div>`:''}
-${sections.includes('faq')&&faqHtml?`<div style="max-width:700px;margin:0 auto;padding:60px 20px"><h2 style="text-align:center;color:${color};font-size:2em;margin-bottom:30px">FAQ</h2>${faqHtml}</div>`:''}
-<div id="contact" style="background:${color};color:white;text-align:center;padding:50px 20px"><h2 style="font-size:2em;margin:0 0 20px">Contactez-nous</h2><div style="display:flex;justify-content:center;gap:30px;flex-wrap:wrap;font-size:1.1em">${phone?`<span>📞 ${phone}</span>`:''} ${email?`<span>✉️ ${email}</span>`:''} ${address?`<span>📍 ${address}</span>`:''}</div><p style="margin-top:20px;opacity:.7;font-size:.9em">© 2026 ${name}</p></div>
-</body></html>`;
-
+    const html = await res.text();
     window._generatedSite = { name, html, template: wsTemplate, color };
     document.getElementById('wsLoading').style.display = 'none';
     document.getElementById('wsPreview').style.display = 'block';
     document.getElementById('wsPreview').srcdoc = html;
-    toast('Site généré avec succès ! 🎉', 'success');
-    // Auto-sauvegarder
+
+    // Récupérer le slug du dernier site créé
     try {
-      await fetch('/api/sites', {method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({site_name:name,template:wsTemplate,colors:{primary:color},html_output:html})});
-      setTimeout(loadSites, 500);
-    } catch(e) { console.log('Save error:', e); }
+      const sitesRes = await fetch('/api/sites');
+      const sitesData = await sitesRes.json();
+      const site = sitesData.sites ? sitesData.sites[0] : null;
+      if (site && site.slug) {
+        const pubUrl = window.location.origin + '/s/' + site.slug;
+        window._generatedSite.slug = site.slug;
+        window._generatedSite.id = site.id;
+        toast('Site généré ! ' + pubUrl, 'success');
+      } else {
+        toast('Site généré avec succes !', 'success');
+      }
+    } catch(e) { toast('Site généré avec succes !', 'success'); }
     addXP(50);
+    setTimeout(loadSites, 500);
   } catch(e) {
     document.getElementById('wsLoading').style.display = 'none';
-    toast('Erreur génération: ' + e.message, 'error');
+    toast('Erreur generation: ' + e.message, 'error');
   }
 }
+
 
 function wsDownload() {
   if (!window._generatedSite) return toast('Générez d\'abord un site', 'warning');

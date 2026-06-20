@@ -1,1 +1,52 @@
-[colle le contenu ci-dessus]
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site cree avec succes</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:-apple-system,Arial,sans-serif; background:#0f172a; color:#fff; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+    .card { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:40px 32px; max-width:520px; width:100%; text-align:center; }
+    .icon { font-size:3rem; margin-bottom:16px; }
+    h1 { font-size:1.6rem; margin-bottom:8px; color:#4ade80; }
+    .site-name { color:#94a3b8; margin-bottom:32px; }
+    .url-box { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:16px 20px; margin-bottom:24px; display:flex; align-items:center; gap:12px; }
+    .url-text { flex:1; font-size:0.9rem; color:#7dd3fc; word-break:break-all; text-align:left; }
+    .copy-btn { background:#3b82f6; border:none; color:#fff; padding:8px 16px; border-radius:8px; cursor:pointer; font-size:0.85rem; white-space:nowrap; }
+    .actions { display:flex; flex-direction:column; gap:12px; }
+    .btn { display:block; padding:14px; border-radius:12px; text-decoration:none; font-weight:600; font-size:0.95rem; }
+    .btn-primary { background:#3b82f6; color:#fff; }
+    .btn-secondary { background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15); }
+    .copied { background:#16a34a !important; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">🎉</div>
+    <h1>Site cree avec succes !</h1>
+    <p class="site-name"><%= site.site_name %></p>
+    <div class="url-box">
+      <span class="url-text" id="publicUrl"><%= publicUrl %></span>
+      <button class="copy-btn" onclick="copyUrl()">Copier</button>
+    </div>
+    <div class="actions">
+      <a href="<%= publicUrl %>" target="_blank" class="btn btn-primary">🌐 Voir le site</a>
+      <a href="/sites/<%= site.id %>/download" class="btn btn-secondary">⬇️ Telecharger HTML</a>
+      <a href="/sites" class="btn btn-secondary">📋 Mes sites</a>
+      <a href="/sites/new" class="btn btn-secondary">➕ Creer un autre site</a>
+    </div>
+  </div>
+  <script>
+    function copyUrl() {
+      const url = document.getElementById('publicUrl').textContent;
+      navigator.clipboard.writeText(url).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copie !';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copier'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

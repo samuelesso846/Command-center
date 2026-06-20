@@ -1182,6 +1182,12 @@ async function wsGenerate() {
   const color = document.getElementById('wsColor').value;
   const sections = Array.from(document.querySelectorAll('.ws-section:checked')).map(s=>s.value);
 
+  // Avancer vers étape 5 d'abord
+  document.getElementById('wsp' + wsStep).classList.remove('active');
+  document.getElementById('ws' + wsStep).classList.add('done');
+  wsStep = 5;
+  document.getElementById('wsp5').classList.add('active');
+  document.getElementById('ws5').classList.add('active');
   document.getElementById('wsLoading').style.display = 'block';
   document.getElementById('wsPreview').style.display = 'none';
 
@@ -1213,6 +1219,12 @@ ${sections.includes('faq')&&faqHtml?`<div style="max-width:700px;margin:0 auto;p
     document.getElementById('wsPreview').style.display = 'block';
     document.getElementById('wsPreview').srcdoc = html;
     toast('Site généré avec succès ! 🎉', 'success');
+    // Auto-sauvegarder
+    try {
+      await fetch('/api/sites', {method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({site_name:name,template:wsTemplate,colors:{primary:color},html_output:html,agency_id:null})});
+      setTimeout(loadSites, 500);
+    } catch(e) { console.log('Save error:', e); }
     addXP(50);
   } catch(e) {
     document.getElementById('wsLoading').style.display = 'none';

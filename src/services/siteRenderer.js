@@ -183,8 +183,8 @@ footer { background:#0f172a; color:rgba(255,255,255,0.6); padding:40px 5%; text-
 .wa-btn:hover { transform:scale(1.1); }
 
 /* REVEAL ANIMATION */
-.reveal { opacity:0; transform:translateY(30px); transition:opacity .6s ease, transform .6s ease; }
-.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal { opacity:1; transform:translateY(0); animation:fadeUp .6s ease both; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
 
 /* RESPONSIVE */
 @media(max-width:768px) {
@@ -367,10 +367,10 @@ function toggleFaq(i) {
 }
 
 // Reveal on scroll
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); } });
-}, { threshold: 0.05, rootMargin: "0px 0px -50px 0px" });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+// Animations CSS natives - pas besoin d'observer
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  el.style.animationDelay = (i * 0.1) + 's';
+});
 
 // Formulaire contact
 function sendForm(e) {

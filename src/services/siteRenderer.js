@@ -473,10 +473,12 @@ function toggleNav() {
   toggle.classList.toggle('active');
 }
 // Fermer menu au clic sur lien
-document.querySelectorAll('.nav-links a').forEach(a => {
-  a.addEventListener('click', () => {
-    document.getElementById('navLinks').classList.remove('open');
-    document.querySelector('.nav-toggle').classList.remove('active');
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.getElementById('navLinks').classList.remove('open');
+      document.querySelector('.nav-toggle').classList.remove('active');
+    });
   });
 });
 

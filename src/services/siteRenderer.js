@@ -372,7 +372,7 @@ ${stats ? `<div class="stats-bar"><div class="stats-inner">${stats}</div></div>`
 </section>
 
 <!-- SECTION METIER -->
-\${buildSectorSection(templateType, c, color, primary)}
+${buildSectorSection(templateType, c, color, primary)}
 
 <!-- TESTIMONIALS -->
 <section class="testi-section" id="testimonials">

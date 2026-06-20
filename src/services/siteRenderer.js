@@ -336,3 +336,4 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 }
 
 module.exports = { buildSiteHtml };
+// redeploy Sat Jun 20 15:59:08 GMT 2026

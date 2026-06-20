@@ -251,8 +251,8 @@ section { padding:80px 5%; }
 .faq-q { width:100%; background:var(--white); border:none; padding:20px 24px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; font-size:.95rem; font-weight:600; color:var(--text); font-family:'Poppins',sans-serif; text-align:left; gap:16px; }
 .faq-q:hover { background:var(--light); }
 .faq-icon { font-size:1.4rem; color:var(--primary); flex-shrink:0; transition:transform .3s; font-weight:300; }
-.faq-a { max-height:0; overflow:hidden; transition:max-height .4s ease, padding .3s; padding:0 24px; color:var(--gray); font-size:.9rem; line-height:1.7; }
-.faq-a.open { max-height:200px; padding:0 24px 20px; }
+.faq-a { max-height:0; overflow:hidden; transition:max-height .5s cubic-bezier(0,1,0,1), padding .3s; padding:0 24px; color:var(--gray); font-size:.9rem; line-height:1.7; }
+.faq-a.open { max-height:1000px; padding:0 24px 20px; transition:max-height 1s ease-in-out, padding .3s; }
 
 /* CONTACT */
 .contact-section { background:linear-gradient(135deg, var(--primary), var(--dark)); }
@@ -485,9 +485,13 @@ function toggleFaq(i) {
   const el = document.getElementById('faq-' + i);
   const icon = document.getElementById('icon-' + i);
   const isOpen = el.classList.contains('open');
-  document.querySelectorAll('.faq-a').forEach(e => e.classList.remove('open'));
-  document.querySelectorAll('.faq-icon').forEach(e => e.textContent = '+');
-  if (!isOpen) { el.classList.add('open'); icon.textContent = '−'; }
+  document.querySelectorAll('.faq-a').forEach(e => { e.classList.remove('open'); });
+  document.querySelectorAll('.faq-icon').forEach(e => { e.textContent = '+'; e.style.transform = 'rotate(0deg)'; });
+  if (!isOpen) {
+    el.classList.add('open');
+    icon.textContent = '×';
+    icon.style.transform = 'rotate(45deg)';
+  }
 }
 
 // Reveal on scroll

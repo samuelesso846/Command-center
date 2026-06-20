@@ -39,7 +39,7 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
       }
     } catch(e) { console.log('Unsplash error:', e.message); }
 
-    const html = buildSiteHtml({ businessName, color: color || '#4285f4', content, contact: { email, phone, address }, images });
+    const html = buildSiteHtml({ businessName, color: color || '#4285f4', content, contact: { email, phone, address }, images, templateType: template });
 
     const baseSlug = generateSlug(businessName);
     let slug = baseSlug;

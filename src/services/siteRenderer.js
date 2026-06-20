@@ -6,7 +6,96 @@ function stars(n = 5) {
   return '★'.repeat(n) + '☆'.repeat(5 - n);
 }
 
-function buildSiteHtmlV2({ businessName, color, content, contact, images = {} }) {
+// Sections spéciales par secteur
+function buildSectorSection(templateType, c, color, primary) {
+  switch(templateType) {
+    case 'restaurant':
+      if (!c.menu_items && !c.services) return '';
+      const plats = (c.services || []).slice(0,4).map(s => `
+        <div class="menu-card">
+          <div class="menu-icon">${s.icon || '🍽️'}</div>
+          <div class="menu-info">
+            <h3>${escapeHtml(s.title)}</h3>
+            <p>${escapeHtml(s.description)}</p>
+          </div>
+          ${s.price_hint ? `<span class="menu-price">${escapeHtml(s.price_hint)}</span>` : ''}
+        </div>`).join('');
+      return `
+<section id="menu" style="background:var(--light);padding:80px 5%;">
+  <div class="section-header text-center">
+    <span class="section-label">Notre Carte</span>
+    <h2 class="section-title">Nos Spécialités</h2>
+  </div>
+  <div style="max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:16px;">
+    ${plats}
+  </div>
+  <div style="text-align:center;margin-top:40px;">
+    <a href="#contact" style="display:inline-flex;align-items:center;gap:8px;background:${primary};color:#fff;padding:14px 32px;border-radius:50px;text-decoration:none;font-weight:600;font-size:1rem;">
+      🍽️ Réserver une table
+    </a>
+  </div>
+</section>`;
+
+    case 'boutique':
+      const prods = (c.services || []).map(s => `
+        <div class="product-card">
+          <div class="product-img">${s.icon || '👗'}</div>
+          <div class="product-info">
+            <h3>${escapeHtml(s.title)}</h3>
+            <p>${escapeHtml(s.description)}</p>
+            ${s.price_hint ? `<span class="product-price">${escapeHtml(s.price_hint)}</span>` : ''}
+          </div>
+        </div>`).join('');
+      return `
+<section id="produits" style="padding:80px 5%;background:var(--light);">
+  <div class="section-header text-center">
+    <span class="section-label">Nos Produits</span>
+    <h2 class="section-title">Nouveautés & Coups de Cœur</h2>
+  </div>
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;">
+    ${prods}
+  </div>
+  <div style="text-align:center;margin-top:40px;padding:24px;background:linear-gradient(135deg,${primary},${primary}dd);border-radius:16px;max-width:600px;margin:40px auto 0;">
+    <p style="color:#fff;font-size:1.1rem;font-weight:600;margin-bottom:16px;">💸 Paiement Mobile Money accepté</p>
+    <p style="color:rgba(255,255,255,0.85);font-size:.9rem;">MTN Mobile Money · Flooz · Orange Money · Carte bancaire</p>
+  </div>
+</section>`;
+
+    case 'avocat':
+      return `
+<section id="urgence" style="padding:60px 5%;background:#1a1a2e;">
+  <div style="max-width:700px;margin:0 auto;text-align:center;">
+    <p style="color:rgba(255,255,255,0.6);font-size:.8rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">⚡ Disponible 7j/7</p>
+    <h2 style="color:#fff;font-size:1.8rem;font-weight:800;margin-bottom:16px;">Besoin d'une consultation urgente ?</h2>
+    <p style="color:rgba(255,255,255,0.7);margin-bottom:32px;">Certaines situations juridiques ne peuvent pas attendre. Contactez-nous maintenant pour une consultation express.</p>
+    <a href="#contact" style="display:inline-flex;align-items:center;gap:8px;background:${primary};color:#fff;padding:16px 36px;border-radius:50px;text-decoration:none;font-weight:700;font-size:1rem;">
+      📞 Consultation express
+    </a>
+  </div>
+</section>`;
+
+    case 'agence':
+      return `
+<section id="process" style="padding:80px 5%;background:var(--light);">
+  <div class="section-header text-center">
+    <span class="section-label">Comment on travaille</span>
+    <h2 class="section-title">Notre Processus en 4 Étapes</h2>
+  </div>
+  <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;">
+    ${['Découverte & Brief', 'Stratégie & Design', 'Développement', 'Livraison & Suivi'].map((step, i) => `
+    <div style="text-align:center;padding:28px 20px;background:#fff;border-radius:16px;border:1px solid #e5e7eb;">
+      <div style="width:48px;height:48px;background:${primary};border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.2rem;margin:0 auto 16px;">${i+1}</div>
+      <h3 style="font-size:1rem;font-weight:700;color:#1a1a2e;">${step}</h3>
+    </div>`).join('')}
+  </div>
+</section>`;
+
+    default:
+      return '';
+  }
+}
+
+function buildSiteHtmlV2({ businessName, color, content, contact, images = {}, templateType = 'landing' }) {
   const c = content || {};
   const primary = color || '#4285f4';
 
@@ -186,6 +275,23 @@ footer { background:#0f172a; color:rgba(255,255,255,0.6); padding:40px 5%; text-
 .wa-btn { position:fixed; bottom:24px; right:24px; z-index:999; width:60px; height:60px; background:#25d366; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(37,211,102,0.4); text-decoration:none; font-size:1.8rem; transition:transform .3s; }
 .wa-btn:hover { transform:scale(1.1); }
 
+/* MENU RESTAURANT */
+.menu-card { display:flex; align-items:center; gap:16px; background:var(--white); border:1px solid #e5e7eb; border-radius:14px; padding:20px; }
+.menu-icon { font-size:2.5rem; flex-shrink:0; }
+.menu-info { flex:1; }
+.menu-info h3 { font-size:1rem; font-weight:700; margin-bottom:6px; }
+.menu-info p { font-size:.85rem; color:var(--gray); line-height:1.6; }
+.menu-price { font-size:.9rem; font-weight:700; color:var(--primary); white-space:nowrap; }
+
+/* BOUTIQUE PRODUITS */
+.product-card { background:var(--white); border-radius:16px; overflow:hidden; border:1px solid #e5e7eb; transition:all .3s; }
+.product-card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.1); }
+.product-img { height:160px; display:flex; align-items:center; justify-content:center; font-size:4rem; background:var(--light); }
+.product-info { padding:20px; }
+.product-info h3 { font-size:1rem; font-weight:700; margin-bottom:8px; }
+.product-info p { font-size:.85rem; color:var(--gray); line-height:1.6; margin-bottom:12px; }
+.product-price { display:inline-block; background:var(--primary); color:#fff; padding:6px 14px; border-radius:50px; font-size:.85rem; font-weight:700; }
+
 /* REVEAL ANIMATION */
 .reveal { opacity:1; transform:translateY(0); animation:fadeUp .6s ease both; }
 @keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
@@ -264,6 +370,9 @@ ${stats ? `<div class="stats-bar"><div class="stats-inner">${stats}</div></div>`
   </div>
   <div class="services-grid">${services}</div>
 </section>
+
+<!-- SECTION METIER -->
+\${buildSectorSection(templateType, c, color, primary)}
 
 <!-- TESTIMONIALS -->
 <section class="testi-section" id="testimonials">

@@ -363,13 +363,14 @@ ${stats ? `<div class="stats-bar"><div class="stats-inner">${stats}</div></div>`
 </section>
 
 <!-- SERVICES -->
+${templateType !== 'restaurant' && templateType !== 'boutique' ? `
 <section id="services">
   <div class="section-header text-center">
     <span class="section-label">Ce que nous faisons</span>
     <h2 class="section-title">${escapeHtml(c.services_title || 'Nos Services')}</h2>
   </div>
   <div class="services-grid">${services}</div>
-</section>
+</section>` : ''}
 
 <!-- SECTION METIER -->
 ${buildSectorSection(templateType, c, color, primary)}

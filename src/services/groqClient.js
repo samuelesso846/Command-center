@@ -4,56 +4,56 @@ const SECTOR_PROMPTS = {
     sections: ["menu", "specialites", "reservation", "galerie_plats"],
     conversion_angle: "donner faim au visiteur et lui faire réserver une table immédiatement",
     services_label: "Notre Menu",
-    local_context: "cuisine africaine, plats locaux, ambiance chaleureuse"
+    local_context: "cuisine africaine et internationale, plats locaux et fusion, ambiance chaleureuse, clientèle africaine et diaspora"
   },
   avocat: {
     expert: "expert juridique et marketing des cabinets d'avocats en Afrique de l'Ouest",
     sections: ["domaines", "expertise", "procedure", "urgence"],
     conversion_angle: "rassurer le client sur sa situation juridique et le pousser à consulter",
     services_label: "Nos Domaines d'Expertise",
-    local_context: "droit OHADA, droit togolais, procédures locales, UEMOA"
+    local_context: "droit OHADA, droits nationaux africains, arbitrage international, contentieux commercial Afrique-Europe"
   },
   boutique: {
     expert: "expert en e-commerce mode et retail en Afrique de l'Ouest",
     sections: ["nouveautes", "produits_vedettes", "promotions", "livraison"],
     conversion_angle: "convertir les visiteurs en acheteurs en mettant en avant qualité et prix accessibles",
     services_label: "Nos Collections",
-    local_context: "Mobile Money, livraison Lomé/Kara, marques accessibles, tenues africaines et modernes"
+    local_context: "Mobile Money, paiement carte, livraison nationale et internationale, mode africaine contemporaine et internationale"
   },
   coach: {
     expert: "expert en coaching personnel et développement humain pour le marché africain",
     sections: ["methode", "resultats", "programme", "temoignages"],
     conversion_angle: "inspirer confiance et pousser à prendre un rendez-vous découverte gratuit",
     services_label: "Mes Programmes",
-    local_context: "développement personnel, leadership africain, transformation de vie"
+    local_context: "développement personnel, leadership africain et international, coaching en français pour clientèle africaine et diaspora"
   },
   agence: {
     expert: "expert en marketing digital et création d'agences web en Afrique",
     sections: ["portfolio", "services", "resultats_clients", "process"],
     conversion_angle: "démontrer l'expertise par des résultats concrets et décrocher un premier contact",
     services_label: "Nos Services Digitaux",
-    local_context: "sites web, réseaux sociaux, Mobile Money, marché togolais et ouest-africain"
+    local_context: "sites web, réseaux sociaux, SEO, publicité digitale, clients en Afrique francophone et en Europe"
   },
   portfolio: {
     expert: "expert en personal branding et présentation de portfolio créatif",
     sections: ["realisations", "competences", "experience", "contact"],
     conversion_angle: "impressionner le recruteur ou client et déclencher un contact immédiat",
     services_label: "Mes Compétences",
-    local_context: "freelance, créatif, professionnel togolais"
+    local_context: "freelance international, créatif africain, professionnel francophone, clients en Afrique et en Europe"
   },
   landing: {
     expert: "expert en copywriting de landing pages à fort taux de conversion",
     sections: ["proposition_valeur", "benefices", "preuve_sociale", "cta"],
     conversion_angle: "maximiser le taux de conversion avec un message ultra-ciblé et des CTAs puissants",
     services_label: "Ce que vous obtenez",
-    local_context: "offre claire, bénéfices immédiats, garantie, urgence"
+    local_context: "offre claire pour marché africain et européen, bénéfices immédiats, garantie, urgence, paiement Mobile Money et carte"
   },
   blog: {
     expert: "expert en content marketing et création de blogs à forte audience",
     sections: ["articles_recents", "categories", "newsletter", "auteur"],
     conversion_angle: "fidéliser le lecteur et l'inciter à s'abonner à la newsletter",
     services_label: "Nos Rubriques",
-    local_context: "contenu en français, audience africaine, sujets locaux"
+    local_context: "contenu en français, audience africaine et diaspora européenne, sujets locaux et internationaux"
   }
 };
 
@@ -76,11 +76,11 @@ RÈGLES ABSOLUES :
 - Chaque service doit répondre à UN problème précis du client
 - La tagline doit être mémorisable et différenciante en 6 mots max
 - Les témoignages doivent contenir UN détail hyper-spécifique qui prouve l'authenticité
-- Les prix doivent être en FCFA et refléter le marché togolais
+- Les prix doivent être adaptés au marché cible (FCFA pour l\'Afrique, EUR pour l\'Europe si pertinent)
 - La proposition de valeur unique doit être claire dès le hero
 - Zéro formulation générique, zéro cliché marketing
 
-SEO : génère un titre et meta description optimisés pour la recherche locale au Togo.
+SEO : génère un titre et meta description optimisés pour la recherche locale en Afrique francophone et internationale si pertinent.
 
 Réponds UNIQUEMENT avec un objet JSON valide :
 

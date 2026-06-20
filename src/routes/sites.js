@@ -56,7 +56,7 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
 });
 
 router.get('/sites/:id/success', requireAuth, async (req, res) => {
-  const { data: site, error } = await getAdminClient().from('sites').select('*').eq('id', req.params.id).single();
+  const { data: site, error } = await getAdminClient().from('sites').select('*').eq('id', req.params.id).eq('agency_id', req.agencyId).single();
   if (error || !site) return res.status(404).send('Site introuvable');
   const baseUrl = process.env.APP_URL || 'https://' + req.headers.host;
   const publicUrl = baseUrl + '/s/' + site.slug;
@@ -74,7 +74,7 @@ router.get('/sites', requireAuth, async (req, res) => {
 });
 
 router.get('/sites/:id/preview', requireAuth, async (req, res) => {
-  const { data: site, error } = await getAdminClient().from('sites').select('*').eq('id', req.params.id).single();
+  const { data: site, error } = await getAdminClient().from('sites').select('*').eq('id', req.params.id).eq('agency_id', req.agencyId).single();
   if (error || !site) return res.status(404).send('Site introuvable');
   res.send(site.html_output);
 });
@@ -86,7 +86,7 @@ router.get('/s/:slug', async (req, res) => {
 });
 
 router.get('/sites/:id/download', requireAuth, async (req, res) => {
-  const { data: site, error } = await getAdminClient().from('sites').select('*').eq('id', req.params.id).single();
+  const { data: site, error } = await getAdminClient().from('sites').select('*').eq('id', req.params.id).eq('agency_id', req.agencyId).single();
   if (error || !site) return res.status(404).send('Site introuvable');
   res.setHeader('Content-Disposition', 'attachment; filename="' + site.site_name.replace(/\s+/g,'-') + '.html"');
   res.setHeader('Content-Type', 'text/html');

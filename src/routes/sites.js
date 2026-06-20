@@ -22,7 +22,24 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
   const { template, businessName, niche, description, color, email, phone } = req.body;
   try {
     const content = await generateSiteContent({ businessName, niche, description, templateType: template });
-    const html = buildSiteHtml({ businessName, color: color || '#4285f4', content, contact: { email, phone } });
+    
+    // Récupérer images Unsplash
+    let images = { hero: null, about: null };
+    try {
+      const query = encodeURIComponent(niche || businessName);
+      const uRes = await fetch('https://api.unsplash.com/photos/random?query=' + query + '&count=2&orientation=landscape', {
+        headers: { 'Authorization': 'Client-ID ' + process.env.UNSPLASH_ACCESS_KEY }
+      });
+      const uData = await uRes.json();
+      if (Array.isArray(uData) && uData.length >= 2) {
+        images.hero = uData[0].urls.regular;
+        images.about = uData[1].urls.regular;
+      } else if (Array.isArray(uData) && uData.length === 1) {
+        images.hero = uData[0].urls.regular;
+      }
+    } catch(e) { console.log('Unsplash error:', e.message); }
+
+    const html = buildSiteHtml({ businessName, color: color || '#4285f4', content, contact: { email, phone, address }, images });
 
     const baseSlug = generateSlug(businessName);
     let slug = baseSlug;

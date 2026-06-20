@@ -6,7 +6,7 @@ function stars(n = 5) {
   return '★'.repeat(n) + '☆'.repeat(5 - n);
 }
 
-function buildSiteHtmlV2({ businessName, color, content, contact }) {
+function buildSiteHtmlV2({ businessName, color, content, contact, images = {} }) {
   const c = content || {};
   const primary = color || '#4285f4';
 
@@ -89,6 +89,7 @@ nav.scrolled { box-shadow:0 2px 20px rgba(0,0,0,0.1); }
 
 /* HERO */
 .hero { min-height:100vh; background:linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%); display:flex; align-items:center; padding:100px 5% 60px; position:relative; overflow:hidden; }
+.hero.has-img { background-size:cover; background-position:center; background-blend-mode:multiply; }
 .hero::before { content:''; position:absolute; top:-50%; right:-20%; width:600px; height:600px; background:rgba(255,255,255,0.05); border-radius:50%; }
 .hero::after { content:''; position:absolute; bottom:-30%; left:-10%; width:400px; height:400px; background:rgba(255,255,255,0.04); border-radius:50%; }
 .hero-content { position:relative; z-index:1; max-width:700px; }
@@ -217,7 +218,7 @@ footer { background:#0f172a; color:rgba(255,255,255,0.6); padding:40px 5%; text-
 </nav>
 
 <!-- HERO -->
-<section class="hero" id="home">
+<section class="hero${images.hero ? ' has-img' : ''}" id="home" ${images.hero ? `style="background-image:linear-gradient(135deg,${primary}dd,${dark}cc),url('${images.hero}')"` : ''}>
   <div class="hero-content">
     <div class="hero-badge">✦ Bienvenue</div>
     <h1>${escapeHtml(c.tagline || businessName)}</h1>
@@ -235,7 +236,7 @@ ${stats ? `<div class="stats-bar"><div class="stats-inner">${stats}</div></div>`
 <!-- ABOUT -->
 <section class="about-section" id="about">
   <div class="about-grid">
-    <div class="about-visual">🏢</div>
+    ${images.about ? `<div class="about-visual" style="background-image:url('${images.about}');background-size:cover;background-position:center;font-size:0;"></div>` : '<div class="about-visual">🏢</div>'}
     <div class="about-text">
       <span class="section-label">À propos de nous</span>
       <h2 class="section-title">${escapeHtml(c.about_title || 'Notre histoire')}</h2>

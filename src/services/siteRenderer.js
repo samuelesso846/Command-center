@@ -369,7 +369,7 @@ function toggleFaq(i) {
 // Reveal on scroll
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); } });
-}, { threshold: 0.1 });
+}, { threshold: 0.05, rootMargin: "0px 0px -50px 0px" });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 // Formulaire contact

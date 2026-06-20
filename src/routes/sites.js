@@ -64,7 +64,7 @@ router.get('/sites/:id/success', requireAuth, async (req, res) => {
 });
 
 router.get('/sites', requireAuth, async (req, res) => {
-  const { data: sites, error: sitesError } = await req.supabase
+  const { data: sites, error: sitesError } = await getAdminClient()
     .from('sites')
     .select('*')
     .eq('agency_id', req.agencyId)

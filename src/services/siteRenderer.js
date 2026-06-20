@@ -138,7 +138,7 @@ function buildSiteHtmlV2({ businessName, color, content, contact, images = {}, t
 
   const faq = (c.faq || []).map((f, i) => `
     <div class="faq-item reveal">
-      <button class="faq-q" onclick="toggleFaq(${i})">
+      <button class="faq-q" data-faq="${i}">
         <span>${escapeHtml(f.question)}</span>
         <span class="faq-icon" id="icon-${i}">+</span>
       </button>
@@ -373,7 +373,7 @@ ${templateType !== 'restaurant' && templateType !== 'boutique' ? `
 </section>` : ''}
 
 <!-- SECTION METIER -->
-${buildSectorSection(templateType, c, color, primary)}
+${buildSectorSection(templateType || "", c, color, primary)}
 
 <!-- TESTIMONIALS -->
 <section class="testi-section" id="testimonials">
@@ -483,18 +483,21 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // FAQ
-function toggleFaq(i) {
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-faq]');
+  if (!btn) return;
+  const i = btn.getAttribute('data-faq');
   const el = document.getElementById('faq-' + i);
   const icon = document.getElementById('icon-' + i);
   const isOpen = el.classList.contains('open');
-  document.querySelectorAll('.faq-a').forEach(e => { e.classList.remove('open'); });
+  document.querySelectorAll('.faq-a').forEach(e => e.classList.remove('open'));
   document.querySelectorAll('.faq-icon').forEach(e => { e.textContent = '+'; e.style.transform = 'rotate(0deg)'; });
   if (!isOpen) {
     el.classList.add('open');
     icon.textContent = '×';
     icon.style.transform = 'rotate(45deg)';
   }
-}
+});
 
 // Reveal on scroll
 // Animations CSS natives - pas besoin d'observer

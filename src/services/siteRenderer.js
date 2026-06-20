@@ -66,6 +66,7 @@ function buildSiteHtmlV2({ businessName, color, content, contact }) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escapeHtml(businessName)} — ${escapeHtml(c.tagline || '')}</title>
 <meta name="description" content="${escapeHtml(c.hero_subtitle || c.tagline || '')}">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='${primary}'/><text y='.9em' font-size='70' x='50%' dominant-baseline='middle' text-anchor='middle'>${(c.services && c.services[0] && c.services[0].icon) ? c.services[0].icon : '✦'}</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -294,6 +295,45 @@ ${stats ? `<div class="stats-bar"><div class="stats-inner">${stats}</div></div>`
   </div>
 </section>
 
+<!-- MAPS -->
+${contact.address ? `
+<section id="localisation" style="padding:0;">
+  <div style="width:100%;height:350px;background:#e5e7eb;position:relative;overflow:hidden;">
+    <iframe
+      width="100%" height="350" style="border:0;" loading="lazy"
+      src="https://maps.google.com/maps?q=${encodeURIComponent(contact.address || businessName + ' Togo')}&output=embed">
+    </iframe>
+  </div>
+</section>` : ''}
+
+<!-- FORMULAIRE CONTACT -->
+<section id="formulaire" style="background:var(--light);padding:80px 5%;">
+  <div style="max-width:600px;margin:0 auto;">
+    <div class="section-header text-center">
+      <span class="section-label">Écrivez-nous</span>
+      <h2 class="section-title">Envoyez un message</h2>
+    </div>
+    <form id="contactForm" onsubmit="sendForm(event)" style="display:flex;flex-direction:column;gap:16px;">
+      <input type="text" id="formName" placeholder="Votre nom complet" required
+        style="padding:14px 18px;border:1px solid #e5e7eb;border-radius:12px;font-family:'Poppins',sans-serif;font-size:.95rem;outline:none;transition:border .2s;"
+        onfocus="this.style.borderColor='${primary}'" onblur="this.style.borderColor='#e5e7eb'">
+      <input type="tel" id="formPhone" placeholder="Votre numéro de téléphone"
+        style="padding:14px 18px;border:1px solid #e5e7eb;border-radius:12px;font-family:'Poppins',sans-serif;font-size:.95rem;outline:none;transition:border .2s;"
+        onfocus="this.style.borderColor='${primary}'" onblur="this.style.borderColor='#e5e7eb'">
+      <textarea id="formMessage" placeholder="Votre message..." rows="4" required
+        style="padding:14px 18px;border:1px solid #e5e7eb;border-radius:12px;font-family:'Poppins',sans-serif;font-size:.95rem;outline:none;resize:vertical;transition:border .2s;"
+        onfocus="this.style.borderColor='${primary}'" onblur="this.style.borderColor='#e5e7eb'"></textarea>
+      <button type="submit" class="btn btn-white"
+        style="background:${primary};color:#fff;justify-content:center;font-size:1rem;padding:16px;">
+        📨 Envoyer le message
+      </button>
+      <div id="formSuccess" style="display:none;background:#dcfce7;color:#16a34a;padding:14px 18px;border-radius:12px;text-align:center;font-weight:600;">
+        ✅ Message envoyé ! Nous vous répondrons dans les 24h.
+      </div>
+    </form>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">${escapeHtml(businessName)}</div>
@@ -330,6 +370,25 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); } });
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Formulaire contact
+function sendForm(e) {
+  e.preventDefault();
+  const name = document.getElementById('formName').value;
+  const phone = document.getElementById('formPhone').value;
+  const message = document.getElementById('formMessage').value;
+  const email = '${escapeHtml(contact.email || '')}';
+  const wa = '${wa}';
+  
+  if (wa) {
+    const text = encodeURIComponent('Bonjour, je suis ' + name + (phone ? ' (' + phone + ')' : '') + '.\n\n' + message);
+    window.open('https://wa.me/' + wa + '?text=' + text, '_blank');
+  } else if (email) {
+    window.location.href = 'mailto:' + email + '?subject=Message de ' + encodeURIComponent(name) + '&body=' + encodeURIComponent(message);
+  }
+  document.getElementById('formSuccess').style.display = 'block';
+  document.getElementById('contactForm').reset();
+}
 </script>
 </body>
 </html>`;

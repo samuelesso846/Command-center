@@ -6,7 +6,7 @@ function stars(n = 5) {
   return '★'.repeat(n) + '☆'.repeat(5 - n);
 }
 
-function buildSiteHtml({ businessName, color, content, contact }) {
+function buildSiteHtmlV2({ businessName, color, content, contact }) {
   const c = content || {};
   const primary = color || '#4285f4';
 
@@ -335,5 +335,5 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </html>`;
 }
 
-module.exports = { buildSiteHtml };
+module.exports = { buildSiteHtml: buildSiteHtmlV2 };
 // redeploy Sat Jun 20 15:59:08 GMT 2026

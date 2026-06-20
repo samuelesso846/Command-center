@@ -65,7 +65,7 @@ Réponds UNIQUEMENT avec un objet JSON valide, sans markdown, sans texte autour 
       model: 'llama-3.3-70b-versatile',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.8,
-      max_tokens: 2500
+      max_tokens: 4000
     })
   });
 

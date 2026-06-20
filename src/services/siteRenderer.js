@@ -64,8 +64,12 @@ function buildSiteHtmlV2({ businessName, color, content, contact, images = {} })
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${escapeHtml(businessName)} — ${escapeHtml(c.tagline || '')}</title>
-<meta name="description" content="${escapeHtml(c.hero_subtitle || c.tagline || '')}">
+<title>${escapeHtml(c.seo_title || businessName + ' — ' + (c.tagline || ''))}</title>
+<meta name="description" content="${escapeHtml(c.seo_description || c.hero_subtitle || '')}">
+<meta property="og:title" content="${escapeHtml(c.og_title || c.tagline || businessName)}">
+<meta property="og:description" content="${escapeHtml(c.seo_description || c.hero_subtitle || '')}">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='${primary}'/><text y='.9em' font-size='70' x='50%' dominant-baseline='middle' text-anchor='middle'>${(c.services && c.services[0] && c.services[0].icon) ? c.services[0].icon : '✦'}</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">

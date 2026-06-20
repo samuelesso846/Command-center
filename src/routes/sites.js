@@ -23,20 +23,32 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
   try {
     const content = await generateSiteContent({ businessName, niche, description, templateType: template });
     
-    // Récupérer images Unsplash
+    // Images Unsplash cohérentes par secteur
+    const SECTOR_QUERIES = {
+      restaurant: { hero: 'african restaurant interior elegant', about: 'african food cuisine delicious' },
+      boutique: { hero: 'fashion boutique store modern', about: 'clothing fashion shopping retail' },
+      avocat: { hero: 'law office professional modern', about: 'lawyer justice legal professional' },
+      coach: { hero: 'coaching training motivation professional', about: 'personal development success' },
+      agence: { hero: 'digital agency office team creative', about: 'web design creative team work' },
+      portfolio: { hero: 'creative professional workspace design', about: 'portfolio creative work art' },
+      landing: { hero: 'business professional success modern', about: 'team work office professional' },
+      blog: { hero: 'writing blogging content creation', about: 'reading writing inspiration desk' }
+    };
+    
     let images = { hero: null, about: null };
     try {
-      const query = encodeURIComponent(niche || businessName);
-      const uRes = await fetch('https://api.unsplash.com/photos/random?query=' + query + '&count=2&orientation=landscape', {
-        headers: { 'Authorization': 'Client-ID ' + process.env.UNSPLASH_ACCESS_KEY }
-      });
-      const uData = await uRes.json();
-      if (Array.isArray(uData) && uData.length >= 2) {
-        images.hero = uData[0].urls.regular;
-        images.about = uData[1].urls.regular;
-      } else if (Array.isArray(uData) && uData.length === 1) {
-        images.hero = uData[0].urls.regular;
-      }
+      const queries = SECTOR_QUERIES[template] || { hero: niche || businessName, about: niche || 'business professional' };
+      const [heroRes, aboutRes] = await Promise.all([
+        fetch('https://api.unsplash.com/photos/random?query=' + encodeURIComponent(queries.hero) + '&orientation=landscape', {
+          headers: { 'Authorization': 'Client-ID ' + process.env.UNSPLASH_ACCESS_KEY }
+        }),
+        fetch('https://api.unsplash.com/photos/random?query=' + encodeURIComponent(queries.about) + '&orientation=landscape', {
+          headers: { 'Authorization': 'Client-ID ' + process.env.UNSPLASH_ACCESS_KEY }
+        })
+      ]);
+      const [heroData, aboutData] = await Promise.all([heroRes.json(), aboutRes.json()]);
+      if (heroData.urls) images.hero = heroData.urls.regular;
+      if (aboutData.urls) images.about = aboutData.urls.regular;
     } catch(e) { console.log('Unsplash error:', e.message); }
 
     const html = buildSiteHtml({ businessName, color: color || '#4285f4', content, contact: { email, phone, address }, images, templateType: template });

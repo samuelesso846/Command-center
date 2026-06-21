@@ -114,8 +114,27 @@ router.get('/s/:slug', async (req, res) => {
   res.send(site.html_output);
 });
 
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
+
+router.post('/sites/:id/upload-image', requireAuth, upload.single('file'), async (req, res) => {
+  try {
+    const { type } = req.body;
+    const ext = req.file.mimetype.split('/')[1];
+    const path = `sites/${req.params.id}/${type}-${Date.now()}.${ext}`;
+    const { error } = await getAdminClient().storage
+      .from('sites-images')
+      .upload(path, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
+    if (error) throw error;
+    const { data } = getAdminClient().storage.from('sites-images').getPublicUrl(path);
+    res.json({ url: data.publicUrl });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 router.post('/sites/:id/update', requireAuth, async (req, res) => {
-  const { name, color, phone, email, address, desc, template } = req.body;
+  const { name, color, phone, email, address, desc, template, heroUrl, aboutUrl } = req.body;
   try {
     const content = await generateSiteContent({
       businessName: name,
@@ -128,7 +147,7 @@ router.post('/sites/:id/update', requireAuth, async (req, res) => {
       color: color || '#6366f1',
       content,
       contact: { email, phone, address },
-      images: {},
+      images: { hero: heroUrl || null, about: aboutUrl || null },
       templateType: template
     });
     const { error } = await getAdminClient().from('sites').update({

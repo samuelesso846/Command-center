@@ -1322,6 +1322,14 @@ async function loadSites() {
             <label style="font-size:.75rem;color:var(--text2);display:block;margin-bottom:4px;">Description (pour régénérer)</label>
             <textarea class="form-input" id="edit-desc-${s.id}" rows="2" style="width:100%;font-size:.85rem;resize:vertical;">${desc}</textarea>
           </div>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:.75rem;color:var(--text2);display:block;margin-bottom:4px;">📸 Photo principale (hero)</label>
+            <input type="file" id="edit-hero-${s.id}" accept="image/*" style="width:100%;font-size:.8rem;color:var(--text);">
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:.75rem;color:var(--text2);display:block;margin-bottom:4px;">📸 Photo À propos</label>
+            <input type="file" id="edit-about-${s.id}" accept="image/*" style="width:100%;font-size:.8rem;color:var(--text);">
+          </div>
           <button class="btn btn-primary" style="width:100%;" onclick="updateSite('${s.id}','${s.template}')">
             🔄 Sauvegarder et régénérer
           </button>
@@ -1343,14 +1351,37 @@ async function updateSite(id, template) {
   const email = document.getElementById('edit-email-' + id).value;
   const address = document.getElementById('edit-address-' + id).value;
   const desc = document.getElementById('edit-desc-' + id).value;
+  const heroFile = document.getElementById('edit-hero-' + id).files[0];
+  const aboutFile = document.getElementById('edit-about-' + id).files[0];
   const btn = document.querySelector('#manage-' + id + ' .btn-primary');
-  btn.textContent = '⏳ Régénération...';
+  btn.textContent = '⏳ Upload en cours...';
   btn.disabled = true;
   try {
+    // Upload images si présentes
+    let heroUrl = null, aboutUrl = null;
+    if (heroFile) {
+      const fd = new FormData();
+      fd.append('file', heroFile);
+      fd.append('siteId', id);
+      fd.append('type', 'hero');
+      const r = await fetch('/sites/' + id + '/upload-image', { method:'POST', body: fd });
+      const d = await r.json();
+      if (d.url) heroUrl = d.url;
+    }
+    if (aboutFile) {
+      const fd = new FormData();
+      fd.append('file', aboutFile);
+      fd.append('siteId', id);
+      fd.append('type', 'about');
+      const r = await fetch('/sites/' + id + '/upload-image', { method:'POST', body: fd });
+      const d = await r.json();
+      if (d.url) aboutUrl = d.url;
+    }
+    btn.textContent = '⏳ Régénération...';
     const res = await fetch('/sites/' + id + '/update', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ name, color, phone, email, address, desc, template })
+      body: JSON.stringify({ name, color, phone, email, address, desc, template, heroUrl, aboutUrl })
     });
     const data = await res.json();
     if (data.error) throw new Error(data.error);

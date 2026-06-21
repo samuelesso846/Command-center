@@ -77,4 +77,50 @@ router.get('/api/tasks', requireAuth, async (req, res) => {
   res.json({ tasks: data });
 });
 
+// MESSAGES
+router.get('/api/messages', requireAuth, async (req, res) => {
+  const { data, error } = await req.supabase.from('site_messages').select('*, sites(site_name)')
+    .eq('agency_id', req.agencyId).order('created_at', { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ messages: data });
+});
+
+router.post('/api/messages', async (req, res) => {
+  const { site_id, name, phone, message } = req.body;
+  if (!site_id || !name || !message) return res.status(400).json({ error: 'Champs manquants' });
+  // Récupérer agency_id du site
+  const { createClient } = require('@supabase/supabase-js');
+  const admin = require('../supabaseClient').getAdminClient();
+  const { data: site } = await admin.from('sites').select('agency_id').eq('id', site_id).single();
+  if (!site) return res.status(404).json({ error: 'Site introuvable' });
+  await admin.from('site_messages').insert({ site_id, agency_id: site.agency_id, name, phone, message });
+  res.json({ success: true });
+});
+
+router.patch('/api/messages/:id/read', requireAuth, async (req, res) => {
+  await req.supabase.from('site_messages').update({ read: true }).eq('id', req.params.id).eq('agency_id', req.agencyId);
+  res.json({ success: true });
+});
+
+// TÉMOIGNAGES
+router.get('/api/testimonials/:siteId', requireAuth, async (req, res) => {
+  const { data, error } = await req.supabase.from('site_testimonials').select('*')
+    .eq('site_id', req.params.siteId).eq('agency_id', req.agencyId).order('created_at', { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ testimonials: data });
+});
+
+router.post('/api/testimonials', requireAuth, async (req, res) => {
+  const { site_id, name, role, text, rating } = req.body;
+  const { data, error } = await req.supabase.from('site_testimonials')
+    .insert({ site_id, agency_id: req.agencyId, name, role, text, rating: rating || 5 }).select().single();
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ testimonial: data });
+});
+
+router.delete('/api/testimonials/:id', requireAuth, async (req, res) => {
+  await req.supabase.from('site_testimonials').delete().eq('id', req.params.id).eq('agency_id', req.agencyId);
+  res.json({ success: true });
+});
+
 module.exports = router;

@@ -51,7 +51,7 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
       if (aboutData.urls) images.about = aboutData.urls.regular;
     } catch(e) { console.log('Unsplash error:', e.message); }
 
-    const html = buildSiteHtml({ businessName, color: color || '#4285f4', content, contact: { email, phone, address }, images, templateType: template });
+    const html = buildSiteHtml({ businessName, color: color || '#4285f4', content, contact: { email, phone, address, siteId: data ? data.id : '' }, images, templateType: template });
 
     const baseSlug = generateSlug(businessName);
     let slug = baseSlug;
@@ -148,6 +148,7 @@ router.post('/sites/:id/update', requireAuth, async (req, res) => {
       content,
       contact: { email, phone, address },
       images: { hero: heroUrl || null, about: aboutUrl || null },
+      contact: { email, phone, address, siteId: req.params.id },
       templateType: template
     });
     const { error } = await getAdminClient().from('sites').update({

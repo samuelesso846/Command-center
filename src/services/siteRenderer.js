@@ -507,22 +507,36 @@ document.querySelectorAll('.reveal').forEach((el, i) => {
 });
 
 // Formulaire contact
-function sendForm(e) {
+async function sendForm(e) {
   e.preventDefault();
   const name = document.getElementById('formName').value;
   const phone = document.getElementById('formPhone').value;
   const message = document.getElementById('formMessage').value;
-  const email = '${escapeHtml(contact.email || '')}';
   const wa = '${wa}';
+  const siteId = '${escapeHtml(contact.siteId || '')}';
+  const btn = document.querySelector('#contactForm button[type="submit"]');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Envoi...'; }
   
+  // Sauvegarder en DB
+  try {
+    await fetch('/api/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ site_id: siteId, name, phone, message })
+    });
+  } catch(e) {}
+  
+  // Envoyer via WhatsApp ou email
   if (wa) {
     const text = encodeURIComponent('Bonjour, je suis ' + name + (phone ? ' (' + phone + ')' : '') + '.\n\n' + message);
     window.open('https://wa.me/' + wa + '?text=' + text, '_blank');
-  } else if (email) {
-    window.location.href = 'mailto:' + email + '?subject=Message de ' + encodeURIComponent(name) + '&body=' + encodeURIComponent(message);
+  } else {
+    const email = '${escapeHtml(contact.email || '')}';
+    if (email) window.location.href = 'mailto:' + email + '?subject=Message de ' + encodeURIComponent(name) + '&body=' + encodeURIComponent(message);
   }
   document.getElementById('formSuccess').style.display = 'block';
   document.getElementById('contactForm').reset();
+  if (btn) { btn.disabled = false; btn.textContent = '📨 Envoyer le message'; }
 }
 </script>
 </body>

@@ -1333,10 +1333,112 @@ async function loadSites() {
           <button class="btn btn-primary" style="width:100%;" onclick="updateSite('${s.id}','${s.template}')">
             🔄 Sauvegarder et régénérer
           </button>
+
+          <!-- TÉMOIGNAGES -->
+          <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px;">
+            <p style="font-size:.8rem;color:var(--text2);font-weight:600;margin-bottom:10px;">⭐ Témoignages</p>
+            <div id="testis-${s.id}" style="margin-bottom:10px;"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+              <input class="form-input" id="testi-name-${s.id}" placeholder="Nom" style="font-size:.8rem;">
+              <input class="form-input" id="testi-role-${s.id}" placeholder="Rôle / Ville" style="font-size:.8rem;">
+            </div>
+            <textarea class="form-input" id="testi-text-${s.id}" rows="2" placeholder="Témoignage..." style="width:100%;font-size:.8rem;margin-bottom:8px;"></textarea>
+            <button class="btn btn-secondary" style="width:100%;font-size:.85rem;" onclick="addTestimonial('${s.id}')">+ Ajouter témoignage</button>
+          </div>
+
+          <!-- MESSAGES REÇUS -->
+          <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px;">
+            <p style="font-size:.8rem;color:var(--text2);font-weight:600;margin-bottom:10px;">📨 Messages reçus</p>
+            <div id="msgs-${s.id}">
+              <button class="btn btn-secondary" style="width:100%;font-size:.85rem;" onclick="loadMessages('${s.id}')">Charger les messages</button>
+            </div>
+          </div>
+
+          <!-- TÉMOIGNAGES -->
+          <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px;">
+            <p style="font-size:.8rem;color:var(--text2);font-weight:600;margin-bottom:10px;">⭐ Témoignages</p>
+            <div id="testis-${s.id}" style="margin-bottom:10px;"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+              <input class="form-input" id="testi-name-${s.id}" placeholder="Nom" style="font-size:.8rem;">
+              <input class="form-input" id="testi-role-${s.id}" placeholder="Rôle / Ville" style="font-size:.8rem;">
+            </div>
+            <textarea class="form-input" id="testi-text-${s.id}" rows="2" placeholder="Témoignage..." style="width:100%;font-size:.8rem;margin-bottom:8px;"></textarea>
+            <button class="btn btn-secondary" style="width:100%;font-size:.85rem;" onclick="addTestimonial('${s.id}')">+ Ajouter témoignage</button>
+          </div>
+
+          <!-- MESSAGES REÇUS -->
+          <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px;">
+            <p style="font-size:.8rem;color:var(--text2);font-weight:600;margin-bottom:10px;">📨 Messages reçus</p>
+            <div id="msgs-${s.id}">
+              <button class="btn btn-secondary" style="width:100%;font-size:.85rem;" onclick="loadMessages('${s.id}')">Charger les messages</button>
+            </div>
+          </div>
         </div>
       </div>`;
     }).join('');
   } catch(e) { console.error(e); }
+}
+
+// TÉMOIGNAGES
+async function addTestimonial(siteId) {
+  const name = document.getElementById('testi-name-' + siteId).value;
+  const role = document.getElementById('testi-role-' + siteId).value;
+  const text = document.getElementById('testi-text-' + siteId).value;
+  if (!name || !text) return toast('Nom et témoignage requis', 'error');
+  try {
+    await fetch('/api/testimonials', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ site_id: siteId, name, role, text, rating: 5 })
+    });
+    document.getElementById('testi-name-' + siteId).value = '';
+    document.getElementById('testi-role-' + siteId).value = '';
+    document.getElementById('testi-text-' + siteId).value = '';
+    toast('Témoignage ajouté !', 'success');
+    loadTestimonials(siteId);
+  } catch(e) { toast('Erreur', 'error'); }
+}
+
+async function loadTestimonials(siteId) {
+  const res = await fetch('/api/testimonials/' + siteId).then(r => r.json());
+  const container = document.getElementById('testis-' + siteId);
+  if (!(res.testimonials || []).length) { container.innerHTML = '<p style="font-size:.8rem;color:var(--text2);">Aucun témoignage</p>'; return; }
+  container.innerHTML = res.testimonials.map(t => `
+    <div style="background:var(--bg);border-radius:8px;padding:10px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <strong style="font-size:.85rem;">${t.name}</strong> <span style="font-size:.75rem;color:var(--text2);">${t.role || ''}</span>
+        <p style="font-size:.8rem;color:var(--text2);margin-top:2px;">"${t.text}"</p>
+      </div>
+      <button onclick="deleteTestimonial('${siteId}','${t.id}')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:1rem;">🗑</button>
+    </div>`).join('');
+}
+
+async function deleteTestimonial(siteId, id) {
+  await fetch('/api/testimonials/' + id, { method: 'DELETE' });
+  loadTestimonials(siteId);
+  toast('Supprimé', 'success');
+}
+
+// MESSAGES
+async function loadMessages(siteId) {
+  const res = await fetch('/api/messages').then(r => r.json());
+  const msgs = (res.messages || []).filter(m => m.site_id === siteId);
+  const container = document.getElementById('msgs-' + siteId);
+  if (!msgs.length) { container.innerHTML = '<p style="font-size:.8rem;color:var(--text2);">Aucun message reçu</p>'; return; }
+  container.innerHTML = msgs.map(m => `
+    <div style="background:var(--bg);border-radius:8px;padding:10px;margin-bottom:6px;${m.read ? 'opacity:.6' : ''}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+        <strong style="font-size:.85rem;">${m.name} ${m.phone ? '— '+m.phone : ''}</strong>
+        <span style="font-size:.7rem;color:var(--text2);">${new Date(m.created_at).toLocaleDateString('fr')}</span>
+      </div>
+      <p style="font-size:.8rem;color:var(--text2);">${m.message}</p>
+      ${!m.read ? '<button onclick="markRead(''+m.id+'')" style="font-size:.75rem;background:none;border:none;color:var(--primary);cursor:pointer;margin-top:4px;">✓ Marquer lu</button>' : ''}
+    </div>`).join('');
+}
+
+async function markRead(id) {
+  await fetch('/api/messages/' + id + '/read', { method: 'PATCH' });
+  toast('Marqué comme lu', 'success');
 }
 
 function toggleManage(id) {

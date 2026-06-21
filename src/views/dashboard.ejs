@@ -1432,7 +1432,7 @@ async function loadMessages(siteId) {
         <span style="font-size:.7rem;color:var(--text2);">${new Date(m.created_at).toLocaleDateString('fr')}</span>
       </div>
       <p style="font-size:.8rem;color:var(--text2);">${m.message}</p>
-      ${!m.read ? '<button onclick="markRead(''+m.id+'')" style="font-size:.75rem;background:none;border:none;color:var(--primary);cursor:pointer;margin-top:4px;">✓ Marquer lu</button>' : ''}
+      ${!m.read ? '<button onclick="markRead(\'' + m.id + '\')" style="font-size:.75rem;background:none;border:none;color:var(--primary);cursor:pointer;margin-top:4px;">✓ Marquer lu</button>' : ''}
     </div>`).join('');
 }
 

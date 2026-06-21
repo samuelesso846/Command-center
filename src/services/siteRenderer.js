@@ -137,13 +137,13 @@ function buildSiteHtmlV2({ businessName, color, content, contact, images = {}, t
     </div>`).join('');
 
   const faq = (c.faq || []).map((f, i) => `
-    <div class="faq-item reveal">
-      <button class="faq-q" data-faq="${i}">
+    <details class="faq-item reveal" ${i === 0 ? 'open' : ''}>
+      <summary class="faq-q">
         <span>${escapeHtml(f.question)}</span>
-        <span class="faq-icon" id="icon-${i}">+</span>
-      </button>
-      <div class="faq-a" id="faq-${i}">${escapeHtml(f.answer)}</div>
-    </div>`).join('');
+        <span class="faq-icon">+</span>
+      </summary>
+      <div class="faq-a open">${escapeHtml(f.answer)}</div>
+    </details>`).join('');
 
   const wa = contact.phone ? contact.phone.replace(/\D/g,'') : '';
   const waMsg = encodeURIComponent(c.whatsapp_message || `Bonjour, je souhaite en savoir plus sur ${businessName}`);
@@ -248,11 +248,13 @@ section { padding:80px 5%; }
 /* FAQ */
 .faq-list { max-width:720px; margin:0 auto; }
 .faq-item { border:1px solid #e5e7eb; border-radius:12px; margin-bottom:12px; overflow:hidden; }
-.faq-q { width:100%; background:var(--white); border:none; padding:20px 24px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; font-size:.95rem; font-weight:600; color:var(--text); font-family:'Poppins',sans-serif; text-align:left; gap:16px; }
+.faq-item summary { list-style:none; }
+.faq-item summary::-webkit-details-marker { display:none; }
+.faq-q { width:100%; background:var(--white); padding:20px 24px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; font-size:.95rem; font-weight:600; color:var(--text); font-family:'Poppins',sans-serif; gap:16px; }
 .faq-q:hover { background:var(--light); }
-.faq-icon { font-size:1.4rem; color:var(--primary); flex-shrink:0; transition:transform .3s; font-weight:300; }
-.faq-a { max-height:0; overflow:hidden; transition:max-height .5s cubic-bezier(0,1,0,1), padding .3s; padding:0 24px; color:var(--gray); font-size:.9rem; line-height:1.7; }
-.faq-a.open { max-height:1000px; padding:0 24px 20px; transition:max-height 1s ease-in-out, padding .3s; }
+.faq-icon { font-size:1.4rem; color:var(--primary); flex-shrink:0; font-weight:300; transition:transform .3s; }
+details[open] .faq-icon { transform:rotate(45deg); }
+.faq-a { padding:0 24px 20px; color:var(--gray); font-size:.9rem; line-height:1.7; }
 
 /* CONTACT */
 .contact-section { background:linear-gradient(135deg, var(--primary), var(--dark)); }

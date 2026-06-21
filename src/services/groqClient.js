@@ -71,14 +71,15 @@ BRIEF CLIENT :
 
 OBJECTIF DE CONVERSION : ${sector.conversion_angle}
 
-RÈGLES ABSOLUES :
-- Écris en BÉNÉFICES, jamais en features. Pas "Nous proposons X" mais "Vous obtenez X pour Y raison"
-- Chaque service doit répondre à UN problème précis du client
-- La tagline doit être mémorisable et différenciante en 6 mots max
-- Les témoignages doivent contenir UN détail hyper-spécifique qui prouve l'authenticité
-- Les prix doivent être adaptés au marché cible (FCFA pour l\'Afrique, EUR pour l\'Europe si pertinent)
-- La proposition de valeur unique doit être claire dès le hero
-- Zéro formulation générique, zéro cliché marketing
+RÈGLES ABSOLUES DE COPYWRITING PREMIUM :
+- MOTS INTERDITS : "Nous résolvons", "Vous obtenez", "Notre équipe", "de qualité", "n'hésitez pas", "nous nous chargeons", "nous nous occupons"
+- Écris comme un copywriter humain senior — varie les structures, utilise des métaphores et questions rhétoriques
+- Tagline : 4-6 mots maximum, une image mentale forte qui reste en tête
+- Services : chaque titre = nom commercial attractif, description commence par verbe fort (Savourez, Découvrez, Transformez) et peint une IMAGE MENTALE
+- Témoignages : inclure UN chiffre précis (ex: "en 3 semaines", "depuis 2 ans") qui rend le témoignage crédible
+- About : raconte une HISTOIRE avec début, transformation, promesse
+- Prix adaptés au marché (FCFA pour l'Afrique, EUR pour l'Europe)
+- Chaque phrase doit convaincre — sinon supprime-la
 
 SEO : génère un titre et meta description optimisés pour la recherche locale en Afrique francophone et internationale si pertinent.
 

@@ -482,21 +482,20 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// FAQ
-document.addEventListener('click', function(e) {
-  const btn = e.target.closest('[data-faq]');
-  if (!btn) return;
-  const i = btn.getAttribute('data-faq');
-  const el = document.getElementById('faq-' + i);
-  const icon = document.getElementById('icon-' + i);
-  const isOpen = el.classList.contains('open');
-  document.querySelectorAll('.faq-a').forEach(e => e.classList.remove('open'));
-  document.querySelectorAll('.faq-icon').forEach(e => { e.textContent = '+'; e.style.transform = 'rotate(0deg)'; });
-  if (!isOpen) {
-    el.classList.add('open');
-    icon.textContent = '×';
-    icon.style.transform = 'rotate(45deg)';
-  }
+// FAQ - utiliser details/summary natif HTML5 comme fallback
+document.querySelectorAll('.faq-q').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    const i = this.getAttribute('data-faq');
+    const el = document.getElementById('faq-' + i);
+    const icon = document.getElementById('icon-' + i);
+    const isOpen = el.classList.contains('open');
+    document.querySelectorAll('.faq-a').forEach(function(e) { e.classList.remove('open'); });
+    document.querySelectorAll('.faq-icon').forEach(function(e) { e.textContent = '+'; });
+    if (!isOpen) {
+      el.classList.add('open');
+      icon.textContent = '×';
+    }
+  });
 });
 
 // Reveal on scroll

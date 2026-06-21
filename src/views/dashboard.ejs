@@ -1266,17 +1266,102 @@ async function loadSites() {
   try {
     const res = await fetch('/api/sites').then(r=>r.json());
     const list = document.getElementById('sitesList');
-    if (!(res.sites||[]).length) { list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text2)">Aucun site créé</div>'; return; }
-    list.innerHTML = res.sites.map(s=>`
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;border-bottom:1px solid var(--border)">
-        <div><strong>${s.site_name}</strong> <span class="badge badge-info">${s.template}</span></div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-sm btn-secondary" onclick="previewSite('${s.id}')">👁️ Aperçu</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteSite('${s.id}')">🗑️</button>
+    if (!(res.sites||[]).length) { 
+      list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text2)">Aucun site créé</div>'; 
+      return; 
+    }
+    list.innerHTML = res.sites.map(s => {
+      const color = (s.colors && s.colors.primary) ? s.colors.primary : '#6366f1';
+      const phone = (s.content && s.content.phone) ? s.content.phone : '';
+      const email = (s.content && s.content.email) ? s.content.email : '';
+      const address = (s.content && s.content.address) ? s.content.address : '';
+      const desc = (s.content && s.content.description) ? s.content.description : '';
+      const slug = s.slug ? '/s/' + s.slug : '';
+      return `
+      <div style="border-bottom:1px solid var(--border);padding:14px 0;" id="siterow-${s.id}">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div>
+            <strong>${s.site_name}</strong> 
+            <span class="badge badge-info">${s.template}</span>
+            ${slug ? '<div style="font-size:.75rem;color:var(--text2);margin-top:2px;">🔗 '+slug+'</div>' : ''}
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="btn btn-sm btn-primary" onclick="toggleManage('${s.id}')">⚙️ Gérer</button>
+            <button class="btn btn-sm btn-secondary" onclick="previewSite('${s.id}')">👁️</button>
+            ${slug ? '<a href="'+slug+'" target="_blank" class="btn btn-sm btn-secondary">🌐</a>' : ''}
+            <button class="btn btn-sm btn-danger" onclick="deleteSite('${s.id}')">🗑️</button>
+          </div>
         </div>
-      </div>
-    `).join('');
-  } catch(e) {}
+        <div id="manage-${s.id}" style="display:none;background:var(--bg2);border-radius:10px;padding:14px;margin-top:8px;">
+          <p style="font-size:.8rem;color:var(--text2);margin-bottom:12px;font-weight:600;">✏️ Modifier les informations</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+            <div>
+              <label style="font-size:.75rem;color:var(--text2);display:block;margin-bottom:4px;">Nom</label>
+              <input class="form-input" id="edit-name-${s.id}" value="${s.site_name}" style="width:100%;font-size:.85rem;">
+            </div>
+            <div>
+              <label style="font-size:.75rem;color:var(--text2);display:block;margin-bottom:4px;">Couleur</label>
+              <input type="color" id="edit-color-${s.id}" value="${color}" style="width:100%;height:38px;border-radius:6px;border:1px solid var(--border);background:transparent;cursor:pointer;">
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+            <div>
+              <label style="font-size:.75rem;color:var(--text2);display:block;margin-bottom:4px;">Téléphone</label>
+              <input class="form-input" id="edit-phone-${s.id}" value="${phone}" placeholder="+228..." style="width:100%;font-size:.85rem;">
+            </div>
+            <div>
+              <label style="font-size:.75rem;color:var(--text2);display:block;margin-bottom:4px;">Email</label>
+              <input class="form-input" id="edit-email-${s.id}" value="${email}" placeholder="email@..." style="width:100%;font-size:.85rem;">
+            </div>
+          </div>
+          <div style="margin-bottom:10px;">
+            <label style="font-size:.75rem;color:var(--text2);display:block;margin-bottom:4px;">Adresse</label>
+            <input class="form-input" id="edit-address-${s.id}" value="${address}" placeholder="Lomé, Togo" style="width:100%;font-size:.85rem;">
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:.75rem;color:var(--text2);display:block;margin-bottom:4px;">Description (pour régénérer)</label>
+            <textarea class="form-input" id="edit-desc-${s.id}" rows="2" style="width:100%;font-size:.85rem;resize:vertical;">${desc}</textarea>
+          </div>
+          <button class="btn btn-primary" style="width:100%;" onclick="updateSite('${s.id}','${s.template}')">
+            🔄 Sauvegarder et régénérer
+          </button>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) { console.error(e); }
+}
+
+function toggleManage(id) {
+  const panel = document.getElementById('manage-' + id);
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+async function updateSite(id, template) {
+  const name = document.getElementById('edit-name-' + id).value;
+  const color = document.getElementById('edit-color-' + id).value;
+  const phone = document.getElementById('edit-phone-' + id).value;
+  const email = document.getElementById('edit-email-' + id).value;
+  const address = document.getElementById('edit-address-' + id).value;
+  const desc = document.getElementById('edit-desc-' + id).value;
+  const btn = document.querySelector('#manage-' + id + ' .btn-primary');
+  btn.textContent = '⏳ Régénération...';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/sites/' + id + '/update', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name, color, phone, email, address, desc, template })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    toast('✅ Site mis à jour !', 'success');
+    loadSites();
+  } catch(e) {
+    toast('Erreur: ' + e.message, 'error');
+  } finally {
+    btn.textContent = '🔄 Sauvegarder et régénérer';
+    btn.disabled = false;
+  }
 }
 
 async function previewSite(id) {

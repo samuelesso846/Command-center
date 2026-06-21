@@ -114,6 +114,36 @@ router.get('/s/:slug', async (req, res) => {
   res.send(site.html_output);
 });
 
+router.post('/sites/:id/update', requireAuth, async (req, res) => {
+  const { name, color, phone, email, address, desc, template } = req.body;
+  try {
+    const content = await generateSiteContent({
+      businessName: name,
+      niche: template,
+      description: desc,
+      templateType: template
+    });
+    const html = buildSiteHtml({
+      businessName: name,
+      color: color || '#6366f1',
+      content,
+      contact: { email, phone, address },
+      images: {},
+      templateType: template
+    });
+    const { error } = await getAdminClient().from('sites').update({
+      site_name: name,
+      colors: { primary: color },
+      html_output: html,
+      content
+    }).eq('id', req.params.id).eq('agency_id', req.agencyId);
+    if (error) throw error;
+    res.json({ success: true });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 router.get('/sites/:id/download', requireAuth, async (req, res) => {
   const { data: site, error } = await getAdminClient().from('sites').select('*').eq('id', req.params.id).eq('agency_id', req.agencyId).single();
   if (error || !site) return res.status(404).send('Site introuvable');

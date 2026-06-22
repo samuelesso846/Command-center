@@ -109,10 +109,37 @@ router.get('/sites/:id/preview', requireAuth, async (req, res) => {
 });
 // FIN routes
 
+const { buildHomePage, buildAboutPage, buildServicesPage, buildTeamPage, buildContactPage } = require('../services/pageRenderer');
+
 router.get('/s/:slug', async (req, res) => {
-  const { data: site, error } = await getAdminClient().from('sites').select('*').eq('slug', req.params.slug).eq('published', true).single();
-  if (error || !site) return res.status(404).send('Site introuvable');
-  res.send(site.html_output);
+  const { data: site } = await getAdminClient().from('sites').select('*').eq('slug', req.params.slug).eq('published', true).single();
+  if (!site) return res.status(404).send('Site introuvable');
+  res.send(buildHomePage(site));
+});
+
+router.get('/s/:slug/a-propos', async (req, res) => {
+  const { data: site } = await getAdminClient().from('sites').select('*').eq('slug', req.params.slug).eq('published', true).single();
+  if (!site) return res.status(404).send('Site introuvable');
+  res.send(buildAboutPage(site));
+});
+
+router.get('/s/:slug/services', async (req, res) => {
+  const { data: site } = await getAdminClient().from('sites').select('*').eq('slug', req.params.slug).eq('published', true).single();
+  if (!site) return res.status(404).send('Site introuvable');
+  res.send(buildServicesPage(site));
+});
+
+router.get('/s/:slug/equipe', async (req, res) => {
+  const { data: site } = await getAdminClient().from('sites').select('*').eq('slug', req.params.slug).eq('published', true).single();
+  if (!site) return res.status(404).send('Site introuvable');
+  const { data: team } = await getAdminClient().from('site_team').select('*').eq('site_id', site.id).order('order_num');
+  res.send(buildTeamPage(site, team || []));
+});
+
+router.get('/s/:slug/contact', async (req, res) => {
+  const { data: site } = await getAdminClient().from('sites').select('*').eq('slug', req.params.slug).eq('published', true).single();
+  if (!site) return res.status(404).send('Site introuvable');
+  res.send(buildContactPage(site));
 });
 
 const multer = require('multer');
@@ -122,12 +149,12 @@ router.post('/sites/:id/upload-image', requireAuth, upload.single('file'), async
   try {
     const { type } = req.body;
     const ext = req.file.mimetype.split('/')[1];
-    const path = `sites/${req.params.id}/${type}-${Date.now()}.${ext}`;
+    const filePath = `sites/${req.params.id}/${type}-${Date.now()}.${ext}`;
     const { error } = await getAdminClient().storage
       .from('sites-images')
-      .upload(path, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
+      .upload(filePath, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
     if (error) throw error;
-    const { data } = getAdminClient().storage.from('sites-images').getPublicUrl(path);
+    const { data } = getAdminClient().storage.from('sites-images').getPublicUrl(filePath);
     res.json({ url: data.publicUrl });
   } catch(e) {
     res.status(500).json({ error: e.message });

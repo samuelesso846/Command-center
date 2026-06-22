@@ -107,6 +107,7 @@ router.get('/sites/:id/preview', requireAuth, async (req, res) => {
   if (error || !site) return res.status(404).send('Site introuvable');
   res.send(site.html_output);
 });
+// FIN routes
 
 router.get('/s/:slug', async (req, res) => {
   const { data: site, error } = await getAdminClient().from('sites').select('*').eq('slug', req.params.slug).eq('published', true).single();

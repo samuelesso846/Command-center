@@ -51,7 +51,7 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
       if (aboutData.urls) images.about = aboutData.urls.regular;
     } catch(e) { console.log('Unsplash error:', e.message); }
 
-    const html = buildSiteHtml({ businessName, color: color || '#4285f4', content, contact: { email, phone, address, siteId: data ? data.id : '' }, images, templateType: template });
+    const html = buildSiteHtml({ businessName, color: color || '#4285f4', content, contact: { email, phone, address, siteId: '' }, images, templateType: template });
 
     const baseSlug = generateSlug(businessName);
     let slug = baseSlug;

@@ -167,10 +167,10 @@ function generateTestimonialsSection(testimonials, primaryColor, accentColor) {
       <p class="testi-text">"${t.text}"</p>
       <div class="testi-author">
         <div class="testi-avatar" style="background:linear-gradient(135deg,${primaryColor},${accentColor})">
-          ${(t.author||"XX").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}
+          ${((t.author||t.name||"XX")).split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}
         </div>
         <div>
-          <strong>${t.author}</strong>
+          <strong>${t.name||t.author||""}</strong>
           ${t.role ? `<span class="testi-role">${t.role}</span>` : ''}
         </div>
       </div>
@@ -211,7 +211,7 @@ function generateStatsSection(stats, statLabels, primaryColor, accentColor) {
   if (!stats || stats.length === 0) return '';
   const items = stats.map((s, i) => `
     <div class="stat-item">
-      <div class="stat-number" style="color:${accentColor}" data-target="${s.value}">${s.value}</div>
+      <div class="stat-number" style="color:${accentColor}" data-target="${s.number||s.value||''}">${s.number||s.value||''}</div>
       <div class="stat-label">${statLabels[i] || s.label || ''}</div>
     </div>
   `).join('');

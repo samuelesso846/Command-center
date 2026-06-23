@@ -624,7 +624,7 @@ function renderPremiumSite(data) {
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <div class="hero-badge">${cfg.logoIcon} ${sector.charAt(0).toUpperCase() + sector.slice(1)}</div>
-      <h1>${heroTitle.includes(' ') ? heroTitle.split(' ').slice(0,-1).join(' ') + ' <span>' + heroTitle.split(' ').slice(-1)[0] + '</span>' : '<span>' + heroTitle + '</span>'}</h1>
+      <h1>${(() => { const t = (heroTitle || businessName || 'Bienvenue').trim(); const w = t.split(' '); return w.length === 1 ? '<span>' + t + '</span>' : w.slice(0,-1).join(' ') + ' <span>' + w[w.length-1] + '</span>'; })()}</h1>
       <p class="hero-sub">${heroSubtitle}</p>
       <div class="hero-actions">
         <a href="${whatsappUrl}" class="btn-primary" target="_blank">💬 Nous contacter</a>

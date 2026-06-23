@@ -49,6 +49,21 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
       const [heroData, aboutData] = await Promise.all([heroRes.json(), aboutRes.json()]);
       if (heroData.urls) images.hero = heroData.urls.regular;
       if (aboutData.urls) images.about = aboutData.urls.regular;
+
+      // Images par service
+      if (content && content.services && content.services.length > 0) {
+        const serviceImgPromises = content.services.map(s => {
+          const q = s.image_query || s.title || niche || 'business professional';
+          return fetch('https://api.unsplash.com/photos/random?query=' + encodeURIComponent(q) + '&orientation=landscape', {
+            headers: { 'Authorization': 'Client-ID ' + process.env.UNSPLASH_ACCESS_KEY }
+          }).then(r => r.json()).catch(() => null);
+        });
+        const serviceImgs = await Promise.all(serviceImgPromises);
+        content.services = content.services.map((s, i) => ({
+          ...s,
+          image: (serviceImgs[i] && serviceImgs[i].urls) ? serviceImgs[i].urls.small : null
+        }));
+      }
     } catch(e) { console.log('Unsplash error:', e.message); }
 
     const html = renderPremiumSite({

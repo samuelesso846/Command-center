@@ -190,9 +190,12 @@ function generateServicesSection(services, primaryColor, accentColor) {
   const icons = ['⚡','🎯','🔒','📈','💼','🌟','🛡️','✅'];
   const cards = services.map((s, i) => `
     <div class="service-card" style="--accent:${accentColor};--primary:${primaryColor}">
-      <div class="service-icon">${icons[i % icons.length]}</div>
-      <h3>${s.title}</h3>
-      <p>${s.description}</p>
+      ${s.image ? `<div class="service-img-wrap"><img src="${s.image}" alt="${s.title}" class="service-img" loading="lazy"/></div>` : `<div class="service-icon">${icons[i % icons.length]}</div>`}
+      <div class="service-body">
+        <h3>${s.title}</h3>
+        <p>${s.description}</p>
+        ${s.price_hint ? `<span class="service-price">${s.price_hint}</span>` : ''}
+      </div>
     </div>
   `).join('');
   return `
@@ -450,6 +453,11 @@ function renderPremiumSite(data) {
       color: var(--primary); margin-bottom: 10px;
     }
     .service-card p { font-size: 0.9rem; color: var(--text-light); line-height: 1.7; }
+    .service-img-wrap { width: 100%; height: 180px; overflow: hidden; border-radius: 10px 10px 0 0; margin: -32px -32px 20px -32px; width: calc(100% + 64px); }
+    .service-img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .service-card:hover .service-img { transform: scale(1.05); }
+    .service-body { padding: 0; }
+    .service-price { display: inline-block; margin-top: 12px; background: var(--accent)20; color: var(--accent); border: 1px solid var(--accent)50; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
 
     /* ── TEAM ── */
     .team-grid {

@@ -98,10 +98,10 @@ Réponds UNIQUEMENT avec un objet JSON valide :
   "about_highlight": "1 chiffre ou fait marquant ultra-spécifique",
   "services_title": "${sector.services_label}",
   "services": [
-    {"icon": "emoji", "title": "nom du service orienté bénéfice", "description": "2 phrases : problème résolu + comment. En bénéfices client.", "price_hint": "prix en FCFA ou indication"},
-    {"icon": "emoji", "title": "nom service 2", "description": "2 phrases bénéfices", "price_hint": ""},
-    {"icon": "emoji", "title": "nom service 3", "description": "2 phrases bénéfices", "price_hint": ""},
-    {"icon": "emoji", "title": "nom service 4", "description": "2 phrases bénéfices", "price_hint": ""}
+    {"icon": "emoji", "title": "nom du service orienté bénéfice", "description": "2 phrases : problème résolu + comment. En bénéfices client.", "price_hint": "prix en FCFA ou indication", "image_query": "mot-clé anglais pour photo Unsplash du service"},
+    {"icon": "emoji", "title": "nom service 2", "description": "2 phrases bénéfices", "price_hint": "", "image_query": "mot-clé anglais Unsplash"},
+    {"icon": "emoji", "title": "nom service 3", "description": "2 phrases bénéfices", "price_hint": "", "image_query": "mot-clé anglais Unsplash"},
+    {"icon": "emoji", "title": "nom service 4", "description": "2 phrases bénéfices", "price_hint": "", "image_query": "mot-clé anglais Unsplash"}
   ],
   "stats": [
     {"number": "chiffre spécifique", "label": "label court"},

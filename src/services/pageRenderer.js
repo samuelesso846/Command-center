@@ -278,12 +278,15 @@ function buildServicesPage(site) {
   const wa = site.content && site.content.phone ? site.content.phone.replace(/\D/g,'') : '';
 
   const services = (c.services || []).map(s => `
-    <div class="card" style="display:flex;gap:20px;align-items:flex-start;">
-      <div style="font-size:2.5rem;flex-shrink:0;">${escapeHtml(s.icon||'✦')}</div>
-      <div>
-        <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:8px;">${escapeHtml(s.title)}</h3>
-        <p style="color:#6b7280;font-size:.875rem;line-height:1.7;margin-bottom:12px;">${escapeHtml(s.description)}</p>
-        ${s.price_hint ? `<span style="display:inline-block;background:rgba(99,102,241,0.08);color:${primary};padding:4px 12px;border-radius:50px;font-size:.8rem;font-weight:600;">${escapeHtml(s.price_hint)}</span>` : ''}
+    <div class="card" style="overflow:hidden;padding:0;">
+      ${s.image ? `<div style="width:100%;height:200px;overflow:hidden;"><img src="${s.image}" alt="${escapeHtml(s.title)}" style="width:100%;height:100%;object-fit:cover;transition:transform .4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"/></div>` : ''}
+      <div style="padding:24px;display:flex;gap:16px;align-items:flex-start;">
+        <div style="font-size:2rem;flex-shrink:0;">${escapeHtml(s.icon||'✦')}</div>
+        <div>
+          <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:8px;">${escapeHtml(s.title)}</h3>
+          <p style="color:#6b7280;font-size:.875rem;line-height:1.7;margin-bottom:12px;">${escapeHtml(s.description)}</p>
+          ${s.price_hint ? `<span style="display:inline-block;background:rgba(99,102,241,0.08);color:${primary};padding:4px 12px;border-radius:50px;font-size:.8rem;font-weight:600;">${escapeHtml(s.price_hint)}</span>` : ''}
+        </div>
       </div>
     </div>`).join('');
 

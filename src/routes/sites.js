@@ -66,6 +66,9 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
       }
     } catch(e) { console.log('Unsplash error:', e.message); }
 
+    // Sauvegarder images dans content pour pageRenderer
+    if (content) content.images = images;
+
     const html = renderPremiumSite({
       businessName,
       sector: template,
@@ -144,19 +147,22 @@ const { buildHomePage, buildAboutPage, buildServicesPage, buildTeamPage, buildCo
 router.get('/s/:slug', async (req, res) => {
   const { data: site } = await getAdminClient().from('sites').select('*').eq('slug', req.params.slug).eq('published', true).single();
   if (!site) return res.status(404).send('Site introuvable');
-  res.send(buildHomePage(site));
+  const images = (site.content && site.content.images) ? site.content.images : {};
+  res.send(buildHomePage(site, images));
 });
 
 router.get('/s/:slug/a-propos', async (req, res) => {
   const { data: site } = await getAdminClient().from('sites').select('*').eq('slug', req.params.slug).eq('published', true).single();
   if (!site) return res.status(404).send('Site introuvable');
-  res.send(buildAboutPage(site));
+  const images = (site.content && site.content.images) ? site.content.images : {};
+  res.send(buildAboutPage(site, images));
 });
 
 router.get('/s/:slug/services', async (req, res) => {
   const { data: site } = await getAdminClient().from('sites').select('*').eq('slug', req.params.slug).eq('published', true).single();
   if (!site) return res.status(404).send('Site introuvable');
-  res.send(buildServicesPage(site));
+  const images = (site.content && site.content.images) ? site.content.images : {};
+  res.send(buildServicesPage(site, images));
 });
 
 router.get('/s/:slug/equipe', async (req, res) => {

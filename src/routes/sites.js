@@ -66,8 +66,13 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
       }
     } catch(e) { console.log('Unsplash error:', e.message); }
 
-    // Sauvegarder images dans content pour pageRenderer
-    if (content) content.images = images;
+    // Sauvegarder images + contact dans content pour pageRenderer
+    if (content) {
+      content.images = images;
+      content.phone = phone || '';
+      content.email = email || '';
+      content.address = address || '';
+    }
 
     const html = renderPremiumSite({
       businessName,

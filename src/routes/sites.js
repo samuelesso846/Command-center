@@ -4,7 +4,7 @@ const { requireAuth } = require('../middleware/auth');
 const { TEMPLATES } = require('../services/siteTemplates');
 const { getAdminClient } = require('../supabaseClient');
 const { generateSiteContent } = require('../services/groqClient');
-const { buildSiteHtml } = require('../services/siteRenderer');
+const { renderPremiumSite } = require('../services/siteRenderer');
 
 function generateSlug(name) {
   return name.toLowerCase()
@@ -51,7 +51,7 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
       if (aboutData.urls) images.about = aboutData.urls.regular;
     } catch(e) { console.log('Unsplash error:', e.message); }
 
-    const html = buildSiteHtml({ businessName, color: color || '#4285f4', content, contact: { email, phone, address, siteId: '' }, images, templateType: template });
+    const html = renderPremiumSite({ businessName, sector: template, heroImage: images.hero, phone, email, address, whatsapp: phone, services: content.services || [], stats: content.stats || [], faqs: content.faqs || [], testimonials: content.testimonials || [], team: content.team || [], heroTitle: content.heroTitle || businessName, heroSubtitle: content.heroSubtitle || '' });
 
     const baseSlug = generateSlug(businessName);
     let slug = baseSlug;
@@ -170,14 +170,19 @@ router.post('/sites/:id/update', requireAuth, async (req, res) => {
       description: desc,
       templateType: template
     });
-    const html = buildSiteHtml({
+    const html = renderPremiumSite({
       businessName: name,
-      color: color || '#6366f1',
-      content,
-      contact: { email, phone, address },
-      images: { hero: heroUrl || null, about: aboutUrl || null },
-      contact: { email, phone, address, siteId: req.params.id },
-      templateType: template
+      sector: template,
+      heroImage: heroUrl || null,
+      phone, email, address,
+      whatsapp: phone,
+      services: content.services || [],
+      stats: content.stats || [],
+      faqs: content.faqs || [],
+      testimonials: content.testimonials || [],
+      team: content.team || [],
+      heroTitle: content.heroTitle || name,
+      heroSubtitle: content.heroSubtitle || ''
     });
     const { error } = await getAdminClient().from('sites').update({
       site_name: name,

@@ -91,7 +91,7 @@ const SECTOR_CONFIG = {
 
 function generateLogoSVG(businessName, sector) {
   const cfg = SECTOR_CONFIG[sector] || SECTOR_CONFIG.agence;
-  const initials = businessName
+  const initials = (businessName || "XX").split(" ").slice(0,2).map(w=>w[0]).join("").toUpperCase()
     .split(' ')
     .slice(0, 2)
     .map(w => w[0])
@@ -121,7 +121,7 @@ function generateTeamSection(teamMembers, primaryColor, accentColor) {
         ${member.photo
           ? `<img src="${member.photo}" alt="${member.name}" class="team-photo" loading="lazy"/>`
           : `<div class="team-photo-placeholder" style="background:linear-gradient(135deg,${primaryColor},${accentColor})">
-               <span>${member.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</span>
+               <span>${(member.name||"XX").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}</span>
              </div>`
         }
       </div>
@@ -167,7 +167,7 @@ function generateTestimonialsSection(testimonials, primaryColor, accentColor) {
       <p class="testi-text">"${t.text}"</p>
       <div class="testi-author">
         <div class="testi-avatar" style="background:linear-gradient(135deg,${primaryColor},${accentColor})">
-          ${t.author.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
+          ${(t.author||"XX").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}
         </div>
         <div>
           <strong>${t.author}</strong>

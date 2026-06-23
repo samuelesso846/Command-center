@@ -51,7 +51,22 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
       if (aboutData.urls) images.about = aboutData.urls.regular;
     } catch(e) { console.log('Unsplash error:', e.message); }
 
-    const html = renderPremiumSite({ businessName, sector: template, heroImage: images.hero, phone, email, address, whatsapp: phone, services: content.services || [], stats: content.stats || [], faqs: content.faqs || [], testimonials: content.testimonials || [], team: content.team || [], heroTitle: content.heroTitle || businessName, heroSubtitle: content.heroSubtitle || '' });
+    const html = renderPremiumSite({
+      businessName,
+      sector: template,
+      heroImage: images.hero || null,
+      phone: phone || '',
+      email: email || '',
+      address: address || '',
+      whatsapp: phone || '',
+      services: (content && content.services) ? content.services : [],
+      stats: (content && content.stats) ? content.stats : [],
+      faqs: (content && content.faqs) ? content.faqs : [],
+      testimonials: (content && content.testimonials) ? content.testimonials : [],
+      team: (content && content.team) ? content.team : [],
+      heroTitle: (content && content.heroTitle) ? content.heroTitle : businessName,
+      heroSubtitle: (content && content.heroSubtitle) ? content.heroSubtitle : ''
+    });
 
     const baseSlug = generateSlug(businessName);
     let slug = baseSlug;

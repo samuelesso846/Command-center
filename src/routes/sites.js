@@ -20,7 +20,7 @@ router.get('/sites/new', requireAuth, (req, res) => {
 });
 
 router.post('/sites/generate', requireAuth, async (req, res) => {
-  const { template, businessName, niche, description, color, email, phone, address } = req.body;
+  const { template, businessName, niche, description, color, email, phone, address, horaires } = req.body;
   try {
     const content = await generateSiteContent({ businessName, niche, description, templateType: template });
     

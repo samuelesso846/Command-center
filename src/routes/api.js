@@ -124,14 +124,42 @@ router.delete('/api/testimonials/:id', requireAuth, async (req, res) => {
 });
 
 
-// ── DÉPLOIEMENT VERCEL ──────────────────────────────────────
+// ── DÉPLOIEMENT VERCEL MULTI-PAGES ─────────────────────────
+const { buildHomePage, buildAboutPage, buildServicesPage, buildTeamPage, buildContactPage } = require('../services/pageRenderer');
+
 router.post('/sites/:id/deploy/vercel', requireAuth, async (req, res) => {
   try {
     const { data: site } = await req.supabase.from('sites').select('*').eq('id', req.params.id).eq('agency_id', req.agencyId).single();
     if (!site) return res.status(404).json({ error: 'Site introuvable' });
 
-    const projectName = 'cc-' + site.slug;
-    const htmlContent = site.html_output || '<h1>Site en construction</h1>';
+    const images = (site.content && site.content.images) ? site.content.images : {};
+    const projectName = ('cc-' + site.slug).slice(0, 52).replace(/[^a-z0-9-]/g, '-');
+
+    // Générer toutes les pages
+    const pages = [
+      { file: 'index.html',         data: buildHomePage(site, images) },
+      { file: 'a-propos/index.html', data: buildAboutPage(site, images) },
+      { file: 'services/index.html', data: buildServicesPage(site, images) },
+      { file: 'equipe/index.html',   data: buildTeamPage(site) },
+      { file: 'contact/index.html',  data: buildContactPage(site) },
+    ];
+
+    // Fixer les liens internes pour Vercel (chemins relatifs)
+    const fixLinks = (html, depth = 0) => {
+      const prefix = depth === 0 ? '' : '../';
+      return html
+        .replace(/href="\/s\/[^/]+\/a-propos"/g, `href="${prefix}a-propos/"`)
+        .replace(/href="\/s\/[^/]+\/services"/g, `href="${prefix}services/"`)
+        .replace(/href="\/s\/[^/]+\/equipe"/g, `href="${prefix}equipe/"`)
+        .replace(/href="\/s\/[^/]+\/contact"/g, `href="${prefix}contact/"`)
+        .replace(/href="\/s\/[^\/]+"/g, `href="${prefix === '' ? './' : '../'}"`);
+    };
+
+    const files = pages.map((p, i) => ({
+      file: p.file,
+      data: Buffer.from(fixLinks(p.data, i === 0 ? 0 : 1)).toString('base64'),
+      encoding: 'base64'
+    }));
 
     const deployRes = await fetch('https://api.vercel.com/v13/deployments', {
       method: 'POST',
@@ -141,7 +169,7 @@ router.post('/sites/:id/deploy/vercel', requireAuth, async (req, res) => {
       },
       body: JSON.stringify({
         name: projectName,
-        files: [{ file: 'index.html', data: Buffer.from(htmlContent).toString('base64'), encoding: 'base64' }],
+        files,
         projectSettings: { framework: null },
         target: 'production'
       })

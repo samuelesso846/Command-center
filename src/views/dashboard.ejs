@@ -1238,7 +1238,7 @@ async function wsGenerate() {
 async function deployVercel(siteId) {
   toast('Déploiement Vercel en cours...', 'info');
   try {
-    const res = await fetch('/api/sites/' + siteId + '/deploy/vercel', { method: 'POST' });
+    const res = await fetch('/sites/' + siteId + '/deploy/vercel', { method: 'POST' });
     const data = await res.json();
     if (data.success) {
       toast('✅ Déployé : ' + data.url, 'success');

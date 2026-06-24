@@ -132,7 +132,12 @@ router.post('/sites/:id/deploy/vercel', requireAuth, async (req, res) => {
     const { data: site } = await req.supabase.from('sites').select('*').eq('id', req.params.id).eq('agency_id', req.agencyId).single();
     if (!site) return res.status(404).json({ error: 'Site introuvable' });
 
-    const images = (site.content && site.content.images) ? site.content.images : {};
+    // S'assurer que content est bien un objet parsé
+    if (typeof site.content === 'string') {
+      try { site.content = JSON.parse(site.content); } catch(e) { site.content = {}; }
+    }
+    site.content = site.content || {};
+    const images = site.content.images || {};
     const projectName = ('cc-' + site.slug).slice(0, 52).replace(/[^a-z0-9-]/g, '-');
 
     // Générer toutes les pages

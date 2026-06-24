@@ -82,7 +82,7 @@
   <div class="toast" id="toast">✅ Modifications enregistrées !</div>
 
   <script>
-    const TOKEN = '<%= req ? req.params.token : "" %>';
+    const TOKEN = '<%= site.admin_token %>';
     const SITE_ID = '<%= site.id %>';
 
     async function saveAndPublish() {

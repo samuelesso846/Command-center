@@ -127,7 +127,7 @@ router.delete('/api/testimonials/:id', requireAuth, async (req, res) => {
 // ── DÉPLOIEMENT VERCEL ──────────────────────────────────────
 router.post('/sites/:id/deploy/vercel', requireAuth, async (req, res) => {
   try {
-    const { data: site } = await supabase.from('sites').select('*').eq('id', req.params.id).eq('agency_id', req.agencyId).single();
+    const { data: site } = await req.supabase.from('sites').select('*').eq('id', req.params.id).eq('agency_id', req.agencyId).single();
     if (!site) return res.status(404).json({ error: 'Site introuvable' });
 
     const projectName = 'cc-' + site.slug;
@@ -150,7 +150,7 @@ router.post('/sites/:id/deploy/vercel', requireAuth, async (req, res) => {
     const deploy = await deployRes.json();
     if (deploy.error) throw new Error(deploy.error.message);
     const url = 'https://' + deploy.url;
-    await supabase.from('sites').update({ custom_domain: url }).eq('id', site.id);
+    await req.supabase.from('sites').update({ custom_domain: url }).eq('id', site.id);
     res.json({ success: true, url });
   } catch(e) {
     res.status(500).json({ error: e.message });

@@ -69,7 +69,8 @@
         <label>Horaires</label>
         <input type="text" id="siteHoraires" value="<%= (site.content && site.content.horaires) ? site.content.horaires : '' %>" placeholder="Lun-Ven: 8h-18h | Sam: 9h-13h"/>
       </div>
-      <button class="btn btn-primary" onclick="saveInfo()">💾 Enregistrer les modifications</button>
+      <button class="btn btn-primary" onclick="saveAndPublish()" style="background:linear-gradient(135deg,#1a2a4a,#C9A84C);margin-bottom:8px;">🚀 Enregistrer & Publier</button>
+      <button class="btn btn-primary" onclick="saveInfo()" style="background:#374151;">💾 Enregistrer sans publier</button>
     </div>
 
     <div class="card">
@@ -83,6 +84,30 @@
   <script>
     const TOKEN = '<%= req ? req.params.token : "" %>';
     const SITE_ID = '<%= site.id %>';
+
+    async function saveAndPublish() {
+      await saveInfo();
+      const toast = document.getElementById('toast');
+      toast.textContent = '⏳ Publication en cours...';
+      toast.style.display = 'block';
+      try {
+        const res = await fetch('/client-admin/<%= site.admin_token %>/publish', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          toast.textContent = '✅ Site publié ! ' + (data.url || '');
+          toast.style.background = '#16a34a';
+          setTimeout(() => toast.style.display = 'none', 5000);
+        } else {
+          toast.textContent = '❌ Erreur: ' + data.error;
+          toast.style.background = '#dc2626';
+          setTimeout(() => toast.style.display = 'none', 4000);
+        }
+      } catch(e) {
+        toast.textContent = '❌ Erreur réseau';
+        toast.style.background = '#dc2626';
+        setTimeout(() => toast.style.display = 'none', 3000);
+      }
+    }
 
     async function saveInfo() {
       const body = {

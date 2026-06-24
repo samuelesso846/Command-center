@@ -289,3 +289,54 @@ router.get('/client-admin/:token/messages', async (req, res) => {
     res.json({ messages: messages || [] });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
+
+router.post('/client-admin/:token/publish', async (req, res) => {
+  try {
+    const { data: site } = await getAdminClient().from('sites')
+      .select('*').eq('admin_token', req.params.token).single();
+    if (!site) return res.status(404).json({ error: 'Token invalide' });
+    if (!process.env.VERCEL_TOKEN) return res.status(500).json({ error: 'Vercel non configuré' });
+
+    const { buildHomePage, buildAboutPage, buildServicesPage, buildTeamPage, buildContactPage } = require('../services/pageRenderer');
+    const images = (site.content && site.content.images) ? site.content.images : {};
+    if (typeof site.content === 'string') site.content = JSON.parse(site.content);
+
+    const projectName = ('cc-' + site.slug).slice(0,52).replace(/[^a-z0-9-]/g,'-');
+    const fixLinks = (html, depth=0) => {
+      const p = depth === 0 ? '' : '../';
+      return html
+        .replace(/href="\/s\/[^/]+\/a-propos"/g, `href="${p}a-propos/"`)
+        .replace(/href="\/s\/[^/]+\/services"/g, `href="${p}services/"`)
+        .replace(/href="\/s\/[^/]+\/equipe"/g, `href="${p}equipe/"`)
+        .replace(/href="\/s\/[^/]+\/contact"/g, `href="${p}contact/"`)
+        .replace(/href="\/s\/[^\/]+"/g, `href="${p === '' ? './' : '../'}"`);
+    };
+
+    const pages = [
+      { file: 'index.html', data: buildHomePage(site, images) },
+      { file: 'a-propos/index.html', data: buildAboutPage(site, images) },
+      { file: 'services/index.html', data: buildServicesPage(site, images) },
+      { file: 'equipe/index.html', data: buildTeamPage(site) },
+      { file: 'contact/index.html', data: buildContactPage(site) },
+    ];
+
+    const files = pages.map((p,i) => ({
+      file: p.file,
+      data: Buffer.from(fixLinks(p.data, i===0?0:1)).toString('base64'),
+      encoding: 'base64'
+    }));
+
+    const deployRes = await fetch('https://api.vercel.com/v13/deployments', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + process.env.VERCEL_TOKEN, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: projectName, files, projectSettings: { framework: null }, target: 'production' })
+    });
+    const deploy = await deployRes.json();
+    if (deploy.error) throw new Error(deploy.error.message);
+    const url = 'https://' + deploy.url;
+    await getAdminClient().from('sites').update({ custom_domain: url }).eq('id', site.id);
+    res.json({ success: true, url });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});

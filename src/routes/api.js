@@ -123,18 +123,16 @@ router.delete('/api/testimonials/:id', requireAuth, async (req, res) => {
   res.json({ success: true });
 });
 
-module.exports = router;
 
 // ── DÉPLOIEMENT VERCEL ──────────────────────────────────────
 router.post('/sites/:id/deploy/vercel', requireAuth, async (req, res) => {
   try {
-    const { data: site } = await supabase.from('sites').select('*').eq('id', req.params.id).eq('agency_id', req.session.agencyId).single();
+    const { data: site } = await supabase.from('sites').select('*').eq('id', req.params.id).eq('agency_id', req.agencyId).single();
     if (!site) return res.status(404).json({ error: 'Site introuvable' });
 
     const projectName = 'cc-' + site.slug;
     const htmlContent = site.html_output || '<h1>Site en construction</h1>';
 
-    // Créer déploiement Vercel
     const deployRes = await fetch('https://api.vercel.com/v13/deployments', {
       method: 'POST',
       headers: {
@@ -143,11 +141,7 @@ router.post('/sites/:id/deploy/vercel', requireAuth, async (req, res) => {
       },
       body: JSON.stringify({
         name: projectName,
-        files: [{
-          file: 'index.html',
-          data: Buffer.from(htmlContent).toString('base64'),
-          encoding: 'base64'
-        }],
+        files: [{ file: 'index.html', data: Buffer.from(htmlContent).toString('base64'), encoding: 'base64' }],
         projectSettings: { framework: null },
         target: 'production'
       })
@@ -155,14 +149,12 @@ router.post('/sites/:id/deploy/vercel', requireAuth, async (req, res) => {
 
     const deploy = await deployRes.json();
     if (deploy.error) throw new Error(deploy.error.message);
-
     const url = 'https://' + deploy.url;
-
-    // Sauvegarder l'URL dans la base
     await supabase.from('sites').update({ custom_domain: url }).eq('id', site.id);
-
     res.json({ success: true, url });
   } catch(e) {
     res.status(500).json({ error: e.message });
   }
 });
+
+module.exports = router;

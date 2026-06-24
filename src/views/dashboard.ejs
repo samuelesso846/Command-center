@@ -1235,6 +1235,20 @@ async function wsGenerate() {
 }
 
 
+async function deployVercel(siteId) {
+  toast('Déploiement Vercel en cours...', 'info');
+  try {
+    const res = await fetch('/api/sites/' + siteId + '/deploy/vercel', { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      toast('✅ Déployé : ' + data.url, 'success');
+      window.open(data.url, '_blank');
+    } else {
+      toast('Erreur: ' + data.error, 'error');
+    }
+  } catch(e) { toast('Erreur réseau', 'error'); }
+}
+
 function wsDownload() {
   if (!window._generatedSite) return toast('Générez d\'abord un site', 'warning');
   const blob = new Blob([window._generatedSite.html], {type:'text/html'});
@@ -1290,6 +1304,7 @@ async function loadSites() {
             <button class="btn btn-sm btn-secondary" onclick="previewSite('${s.id}')">👁️</button>
             ${slug ? '<a href="'+slug+'" target="_blank" class="btn btn-sm btn-secondary">🌐</a>' : ''}
             <button class="btn btn-sm btn-danger" onclick="deleteSite('${s.id}')">🗑️</button>
+            <button class="btn btn-sm" style="background:#000;color:#fff;font-size:.75rem;" onclick="deployVercel('${s.id}')">▲ Vercel</button>
           </div>
         </div>
         <div id="manage-${s.id}" style="display:none;background:var(--bg2);border-radius:10px;padding:14px;margin-top:8px;">

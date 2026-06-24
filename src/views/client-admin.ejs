@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Espace Admin — <%= site.site_name %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#f8fafc;color:#1a1a2e;min-height:100vh}
+    .header{background:linear-gradient(135deg,#1a2a4a,#2c3e6a);color:#fff;padding:20px 5%;display:flex;align-items:center;justify-content:space-between}
+    .header h1{font-size:1.1rem;font-weight:700}
+    .header span{font-size:.8rem;opacity:.7}
+    .container{max-width:700px;margin:32px auto;padding:0 16px}
+    .card{background:#fff;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+    .card h2{font-size:1rem;font-weight:700;margin-bottom:16px;color:#1a2a4a}
+    .form-group{margin-bottom:14px}
+    label{display:block;font-size:.8rem;font-weight:600;color:#6b7280;margin-bottom:6px}
+    input,textarea{width:100%;padding:10px 14px;border:1px solid #e5e7eb;border-radius:10px;font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:border .2s}
+    input:focus,textarea:focus{border-color:#1a2a4a}
+    textarea{min-height:80px;resize:vertical}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;font-weight:600;font-size:.9rem;border:none;cursor:pointer;transition:opacity .2s}
+    .btn-primary{background:#1a2a4a;color:#fff;width:100%;justify-content:center}
+    .btn-primary:hover{opacity:.85}
+    .btn-view{background:#f0f9ff;color:#0369a1;text-decoration:none;padding:10px 20px;border-radius:10px;font-size:.85rem;font-weight:600;display:inline-block}
+    .site-preview{display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border-radius:12px;padding:16px;margin-bottom:20px}
+    .site-name{font-weight:700;font-size:1rem}
+    .site-slug{font-size:.8rem;color:#6b7280;margin-top:2px}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#16a34a;color:#fff;padding:12px 24px;border-radius:10px;font-weight:600;font-size:.9rem;display:none;z-index:100}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>🔐 Espace Admin</h1>
+      <span><%= site.site_name %></span>
+    </div>
+    <a href="<%= publicUrl %>" target="_blank" class="btn-view">🌐 Voir mon site</a>
+  </div>
+
+  <div class="container">
+    <div class="site-preview">
+      <div>
+        <div class="site-name"><%= site.site_name %></div>
+        <div class="site-slug">/<%= site.slug %></div>
+      </div>
+      <a href="<%= publicUrl %>" target="_blank" class="btn-view">Voir →</a>
+    </div>
+
+    <div class="card">
+      <h2>✏️ Informations générales</h2>
+      <div class="form-group">
+        <label>Nom du business</label>
+        <input type="text" id="siteName" value="<%= site.site_name %>"/>
+      </div>
+      <div class="form-group">
+        <label>Téléphone</label>
+        <input type="text" id="sitePhone" value="<%= (site.content && site.content.phone) ? site.content.phone : '' %>"/>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="text" id="siteEmail" value="<%= (site.content && site.content.email) ? site.content.email : '' %>"/>
+      </div>
+      <div class="form-group">
+        <label>Adresse</label>
+        <input type="text" id="siteAddress" value="<%= (site.content && site.content.address) ? site.content.address : '' %>"/>
+      </div>
+      <div class="form-group">
+        <label>Horaires</label>
+        <input type="text" id="siteHoraires" value="<%= (site.content && site.content.horaires) ? site.content.horaires : '' %>" placeholder="Lun-Ven: 8h-18h | Sam: 9h-13h"/>
+      </div>
+      <button class="btn btn-primary" onclick="saveInfo()">💾 Enregistrer les modifications</button>
+    </div>
+
+    <div class="card">
+      <h2>📩 Messages reçus</h2>
+      <div id="messagesList"><p style="color:#9ca3af;font-size:.9rem">Chargement...</p></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">✅ Modifications enregistrées !</div>
+
+  <script>
+    const TOKEN = '<%= req ? req.params.token : "" %>';
+    const SITE_ID = '<%= site.id %>';
+
+    async function saveInfo() {
+      const body = {
+        name: document.getElementById('siteName').value,
+        phone: document.getElementById('sitePhone').value,
+        email: document.getElementById('siteEmail').value,
+        address: document.getElementById('siteAddress').value,
+        horaires: document.getElementById('siteHoraires').value,
+      };
+      try {
+        const res = await fetch('/client-admin/<%= site.admin_token %>/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (data.success) showToast();
+        else alert('Erreur: ' + data.error);
+      } catch(e) { alert('Erreur réseau'); }
+    }
+
+    async function loadMessages() {
+      try {
+        const res = await fetch('/client-admin/<%= site.admin_token %>/messages');
+        const data = await res.json();
+        const el = document.getElementById('messagesList');
+        if (!data.messages || data.messages.length === 0) {
+          el.innerHTML = '<p style="color:#9ca3af;font-size:.9rem">Aucun message reçu pour l\'instant.</p>';
+          return;
+        }
+        el.innerHTML = data.messages.map(m => `
+          <div style="border:1px solid #e5e7eb;border-radius:10px;padding:14px;margin-bottom:10px;">
+            <div style="font-weight:600;font-size:.9rem">${m.name} <span style="color:#9ca3af;font-weight:400;font-size:.8rem">${m.phone||''}</span></div>
+            <div style="font-size:.85rem;color:#374151;margin-top:6px">${m.message||''}</div>
+            <div style="font-size:.75rem;color:#9ca3af;margin-top:6px">${new Date(m.created_at).toLocaleDateString('fr')}</div>
+          </div>
+        `).join('');
+      } catch(e) {}
+    }
+
+    function showToast() {
+      const t = document.getElementById('toast');
+      t.style.display = 'block';
+      setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    loadMessages();
+  </script>
+</body>
+</html>

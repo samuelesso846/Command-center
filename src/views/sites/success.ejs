@@ -30,8 +30,21 @@
       <span class="url-text" id="publicUrl"><%= publicUrl %></span>
       <button class="copy-btn" onclick="copyUrl()">Copier</button>
     </div>
+    <% if (site.admin_token) { %>
+    <div style="background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.3);border-radius:12px;padding:16px 20px;margin-bottom:24px;">
+      <p style="font-size:.8rem;color:#fbbf24;margin-bottom:8px;font-weight:600;">🔐 Lien Admin Client</p>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span id="adminUrl" style="flex:1;font-size:.8rem;color:#fde68a;word-break:break-all;text-align:left;"><%= adminUrl %></span>
+        <button class="copy-btn" onclick="copyAdmin()" style="background:#d97706;">Copier</button>
+      </div>
+      <p style="font-size:.72rem;color:#94a3b8;margin-top:8px;">⚠️ Partagez ce lien uniquement avec votre client</p>
+    </div>
+    <% } %>
     <div class="actions">
       <a href="<%= publicUrl %>" target="_blank" class="btn btn-primary">🌐 Voir le site</a>
+      <% if (site.admin_token) { %>
+      <a href="<%= adminUrl %>" target="_blank" class="btn btn-secondary" style="background:rgba(234,179,8,0.15);border-color:rgba(234,179,8,0.3);color:#fbbf24;">🔐 Espace Admin Client</a>
+      <% } %>
       <a href="/sites/<%= site.id %>/download" class="btn btn-secondary">⬇️ Telecharger HTML</a>
       <a href="/sites" class="btn btn-secondary">📋 Mes sites</a>
       <a href="/sites/new" class="btn btn-secondary">➕ Creer un autre site</a>
@@ -45,6 +58,14 @@
         btn.textContent = 'Copie !';
         btn.classList.add('copied');
         setTimeout(() => { btn.textContent = 'Copier'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+    function copyAdmin() {
+      const url = document.getElementById('adminUrl').textContent;
+      navigator.clipboard.writeText(url).then(() => {
+        const btns = document.querySelectorAll('.copy-btn');
+        btns[1].textContent = 'Copié !';
+        setTimeout(() => { btns[1].textContent = 'Copier'; }, 2000);
       });
     }
   </script>

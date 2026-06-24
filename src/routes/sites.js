@@ -1,4 +1,5 @@
 const express = require('express');
+const crypto = require('crypto');
 const router = express.Router();
 const { requireAuth } = require('../middleware/auth');
 const { TEMPLATES } = require('../services/siteTemplates');
@@ -102,6 +103,8 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
       slug = baseSlug + '-' + attempt;
     }
 
+    const adminToken = crypto.randomBytes(32).toString('hex');
+
     const { data, error } = await getAdminClient().from('sites').insert({
       agency_id: req.agencyId,
       template,
@@ -112,7 +115,8 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
       sections: { services: true, gallery: true, testimonials: true, faq: true },
       content,
       html_output: html,
-      published: true
+      published: true,
+      admin_token: adminToken
     }).select().single();
 
     if (error) throw error;
@@ -128,7 +132,10 @@ router.get('/sites/:id/success', requireAuth, async (req, res) => {
   if (error || !site) return res.status(404).send('Site introuvable');
   const baseUrl = process.env.APP_URL || 'https://' + req.headers.host;
   const publicUrl = baseUrl + '/s/' + site.slug;
-  res.render('sites/success', { site, publicUrl });
+  const adminUrl = site.admin_token
+    ? (process.env.APP_URL || 'https://' + req.headers.host) + '/client-admin/' + site.admin_token
+    : null;
+  res.render('sites/success', { site, publicUrl, adminUrl });
 });
 
 router.get('/sites', requireAuth, async (req, res) => {
@@ -249,3 +256,36 @@ router.get('/sites/:id/download', requireAuth, async (req, res) => {
 
 module.exports = router;
  
+
+// ── ESPACE ADMIN CLIENT ─────────────────────────────────────
+router.get('/client-admin/:token', async (req, res) => {
+  const { data: site } = await getAdminClient().from('sites')
+    .select('*').eq('admin_token', req.params.token).single();
+  if (!site) return res.status(404).send('Lien invalide ou expiré');
+  const publicUrl = '/s/' + site.slug;
+  res.render('client-admin', { site, publicUrl });
+});
+
+router.post('/client-admin/:token/save', async (req, res) => {
+  try {
+    const { data: site } = await getAdminClient().from('sites')
+      .select('*').eq('admin_token', req.params.token).single();
+    if (!site) return res.status(404).json({ error: 'Token invalide' });
+    const { name, phone, email, address, horaires } = req.body;
+    const content = { ...(site.content || {}), phone, email, address, horaires };
+    await getAdminClient().from('sites')
+      .update({ site_name: name, content }).eq('id', site.id);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+router.get('/client-admin/:token/messages', async (req, res) => {
+  try {
+    const { data: site } = await getAdminClient().from('sites')
+      .select('id').eq('admin_token', req.params.token).single();
+    if (!site) return res.status(404).json({ error: 'Token invalide' });
+    const { data: messages } = await getAdminClient().from('site_messages')
+      .select('*').eq('site_id', site.id).order('created_at', { ascending: false });
+    res.json({ messages: messages || [] });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});

@@ -340,3 +340,11 @@ router.post('/client-admin/:token/publish', async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
+
+router.get('/s/:slug/realisations', async (req, res) => {
+  const { data: site } = await getAdminClient().from('sites').select('*').eq('slug', req.params.slug).eq('published', true).single();
+  if (!site) return res.status(404).send('Site introuvable');
+  if (typeof site.content === 'string') site.content = JSON.parse(site.content);
+  const { buildRealisationsPage } = require('../services/pageRenderer');
+  res.send(buildRealisationsPage(site));
+});

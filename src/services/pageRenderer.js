@@ -85,6 +85,7 @@ footer { background:#0f172a; color:rgba(255,255,255,0.6); padding:48px 5% 24px; 
     <li><a href="${baseUrl}/a-propos" class="${currentPage==='about'?'active':''}">À propos</a></li>
     <li><a href="${baseUrl}/services" class="${currentPage==='services'?'active':''}">Services</a></li>
     <li><a href="${baseUrl}/equipe" class="${currentPage==='team'?'active':''}">Équipe</a></li>
+    <li><a href="${baseUrl}/realisations" class="${currentPage==='realisations'?'active':''}">Réalisations</a></li>
     <li><a href="${baseUrl}/contact" class="nav-cta ${currentPage==='contact'?'active':''}">Contact</a></li>
   </ul>
   <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">
@@ -459,4 +460,51 @@ function buildContactPage(site) {
 ` + buildFooter(site, wa);
 }
 
-module.exports = { buildHomePage, buildAboutPage, buildServicesPage, buildTeamPage, buildContactPage };
+module.exports = { buildHomePage, buildAboutPage, buildServicesPage, buildTeamPage, buildContactPage, buildRealisationsPage };
+
+function buildRealisationsPage(site, images = {}) {
+  const { nav, primary, baseUrl, c } = buildSharedAssets(site, 'realisations');
+  const wa = site.content && site.content.phone ? site.content.phone.replace(/\D/g,'') : '';
+  const waMsg = encodeURIComponent(c.whatsapp_message || 'Bonjour, je souhaite discuter d\'un projet.');
+
+  const realisations = (c.realisations || []).map(r => `
+    <div class="card" style="overflow:hidden;padding:0;">
+      ${r.image ? `<div style="width:100%;height:220px;overflow:hidden;">
+        <img src="${r.image}" alt="${escapeHtml(r.titre)}" style="width:100%;height:100%;object-fit:cover;transition:transform .4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"/>
+      </div>` : `<div style="width:100%;height:80px;background:linear-gradient(135deg,${primary},${primary}99);"></div>`}
+      <div style="padding:24px;">
+        <div style="font-size:.75rem;font-weight:700;color:${primary};letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">${escapeHtml(r.client||'')}</div>
+        <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:10px;color:#1a1a2e;">${escapeHtml(r.titre)}</h3>
+        <p style="font-size:.875rem;color:#6b7280;line-height:1.7;margin-bottom:16px;">${escapeHtml(r.description||'')}</p>
+        ${r.resultat ? `<div style="display:inline-flex;align-items:center;gap:8px;background:${primary}15;color:${primary};padding:8px 16px;border-radius:50px;font-size:.82rem;font-weight:700;">
+          📈 ${escapeHtml(r.resultat)}
+        </div>` : ''}
+      </div>
+    </div>`).join('');
+
+  return nav + `
+  <section style="background:linear-gradient(135deg,#f8fafc,#fff);padding:100px 5% 60px;">
+    <div class="container">
+      <span class="section-label">Nos Réalisations</span>
+      <h1 class="section-title">Projets & Études de cas</h1>
+      <p class="section-sub">Découvrez comment nous avons aidé nos clients à atteindre leurs objectifs.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;">
+        ${realisations || '<p style="color:#9ca3af">Aucune réalisation disponible pour l\'instant.</p>'}
+      </div>
+    </div>
+  </section>
+
+  <section style="background:linear-gradient(135deg,${primary},${primary}cc);padding:60px 5%;text-align:center;">
+    <div class="container">
+      <h2 style="color:#fff;font-size:1.8rem;font-weight:700;margin-bottom:16px;">Vous avez un projet ?</h2>
+      <p style="color:rgba(255,255,255,0.85);margin-bottom:28px;">Parlons de vos besoins et voyons comment nous pouvons vous aider.</p>
+      ${wa ? `<a href="https://wa.me/${wa}?text=${waMsg}" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;padding:14px 32px;border-radius:12px;font-weight:700;text-decoration:none;font-size:1rem;">💬 Discuter du projet</a>` : ''}
+    </div>
+  </section>
+` + buildFooter(site, wa);
+}

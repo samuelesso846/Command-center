@@ -120,6 +120,11 @@ Réponds UNIQUEMENT avec un objet JSON valide :
   ],
   "horaires": "Lun-Ven: 8h-18h | Sam: 9h-13h",
   "consultation_disponible": true,
+  "realisations": [
+    {"titre": "nom du projet réalisé", "client": "type de client", "description": "2 phrases sur le projet et les défis", "resultat": "chiffre ou impact concret ex: +40% de clients", "image_query": "mot-clé anglais Unsplash pour ce projet"},
+    {"titre": "projet 2", "client": "type client", "description": "2 phrases", "resultat": "impact chiffré", "image_query": "mot-clé anglais"},
+    {"titre": "projet 3", "client": "type client", "description": "2 phrases", "resultat": "impact chiffré", "image_query": "mot-clé anglais"}
+  ],
   "whatsapp_message": "message WhatsApp pré-rempli naturel et engageant",
   "footer_description": "slogan de positionnement court et mémorisable"
 }`;

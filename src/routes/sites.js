@@ -72,6 +72,7 @@ router.post('/sites/generate', requireAuth, async (req, res) => {
       content.phone = phone || '';
       content.email = email || '';
       content.address = address || '';
+      content.horaires = horaires || '';
     }
 
     const html = renderPremiumSite({
@@ -203,7 +204,7 @@ router.post('/sites/:id/upload-image', requireAuth, upload.single('file'), async
 });
 
 router.post('/sites/:id/update', requireAuth, async (req, res) => {
-  const { name, color, phone, email, address, desc, template, heroUrl, aboutUrl } = req.body;
+  const { name, color, phone, email, address, horaires, desc, template, heroUrl, aboutUrl } = req.body;
   try {
     const content = await generateSiteContent({
       businessName: name,

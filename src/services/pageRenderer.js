@@ -124,6 +124,7 @@ function buildFooter(site, wa) {
           ${site.content && site.content.phone ? `<li><a href="tel:${escapeHtml(site.content.phone)}">📞 ${escapeHtml(site.content.phone)}</a></li>` : ''}
           ${site.content && site.content.email ? `<li><a href="mailto:${escapeHtml(site.content.email)}">✉️ ${escapeHtml(site.content.email)}</a></li>` : ''}
           ${site.content && site.content.address ? `<li>📍 ${escapeHtml(site.content.address)}</li>` : ''}
+          ${site.content && site.content.horaires ? `<li>🕐 ${escapeHtml(site.content.horaires)}</li>` : ''}
         </ul>
       </div>
     </div>
@@ -394,6 +395,10 @@ function buildContactPage(site) {
             ${wa ? `<a href="https://wa.me/${wa}?text=${waMsg}" target="_blank" style="display:flex;align-items:center;gap:14px;padding:16px;background:#dcfce7;border-radius:12px;border:1px solid #bbf7d0;text-decoration:none;color:inherit;"><span style="font-size:1.3rem;">💬</span><div><div style="font-size:.75rem;color:#9ca3af;margin-bottom:2px;">WhatsApp</div><div style="font-weight:600;color:#16a34a;">Écrire sur WhatsApp</div></div></a>` : ''}
             ${address ? `<div style="display:flex;align-items:center;gap:14px;padding:16px;background:#f8fafc;border-radius:12px;border:1px solid #e5e7eb;"><span style="font-size:1.3rem;">📍</span><div><div style="font-size:.75rem;color:#9ca3af;margin-bottom:2px;">Adresse</div><div style="font-weight:600;">${escapeHtml(address)}</div></div></div>` : ''}
           </div>
+
+          ${c.horaires ? `<div style="display:flex;align-items:center;gap:14px;padding:16px;background:#f8fafc;border-radius:12px;border:1px solid #e5e7eb;"><span style="font-size:1.3rem;">🕐</span><div><div style="font-size:.75rem;color:#9ca3af;margin-bottom:2px;">Horaires</div><div style="font-weight:600;">${escapeHtml(c.horaires)}</div></div></div>` : ''}
+
+          ${wa ? `<a href="https://wa.me/${wa}?text=${encodeURIComponent('Bonjour, je souhaite prendre rendez-vous.')}" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:12px;color:white;font-weight:700;font-size:1rem;text-decoration:none;box-shadow:0 4px 15px rgba(37,211,102,0.4);transition:transform .2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">📅 Prendre rendez-vous</a>` : ''}
 
           ${address ? `<div style="border-radius:16px;overflow:hidden;height:250px;">
             <iframe width="100%" height="250" style="border:0;" loading="lazy"

@@ -118,6 +118,8 @@ Réponds UNIQUEMENT avec un objet JSON valide :
     {"question": "question spécifique secteur", "answer": "réponse précise"},
     {"question": "question spécifique secteur", "answer": "réponse précise"}
   ],
+  "horaires": "Lun-Ven: 8h-18h | Sam: 9h-13h",
+  "consultation_disponible": true,
   "whatsapp_message": "message WhatsApp pré-rempli naturel et engageant",
   "footer_description": "slogan de positionnement court et mémorisable"
 }`;

@@ -1332,6 +1332,8 @@ async function loadSites() {
           <div style="margin-bottom:10px;">
             <label style="font-size:.75rem;color:var(--text2);display:block;margin-bottom:4px;">Adresse</label>
             <input class="form-input" id="edit-address-${s.id}" value="${address}" placeholder="Lomé, Togo" style="width:100%;font-size:.85rem;">
+            <label style="font-size:.75rem;color:var(--text2);display:block;margin-top:8px;margin-bottom:4px;">Horaires</label>
+            <input class="form-input" id="edit-horaires-${s.id}" value="${(s.content && s.content.horaires) ? s.content.horaires : ''}" placeholder="Lun-Ven: 8h-18h | Sam: 9h-13h" style="width:100%;font-size:.85rem;">
           </div>
           <div style="margin-bottom:12px;">
             <label style="font-size:.75rem;color:var(--text2);display:block;margin-bottom:4px;">Description (pour régénérer)</label>
@@ -1467,6 +1469,7 @@ async function updateSite(id, template) {
   const phone = document.getElementById('edit-phone-' + id).value;
   const email = document.getElementById('edit-email-' + id).value;
   const address = document.getElementById('edit-address-' + id).value;
+  const horaires = document.getElementById('edit-horaires-' + id) ? document.getElementById('edit-horaires-' + id).value : '';
   const desc = document.getElementById('edit-desc-' + id).value;
   const heroFile = document.getElementById('edit-hero-' + id).files[0];
   const aboutFile = document.getElementById('edit-about-' + id).files[0];
@@ -1498,7 +1501,7 @@ async function updateSite(id, template) {
     const res = await fetch('/sites/' + id + '/update', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ name, color, phone, email, address, desc, template, heroUrl, aboutUrl })
+      body: JSON.stringify({ name, color, phone, email, address, horaires, desc, template, heroUrl, aboutUrl })
     });
     const data = await res.json();
     if (data.error) throw new Error(data.error);

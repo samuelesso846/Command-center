@@ -348,3 +348,11 @@ router.get('/s/:slug/realisations', async (req, res) => {
   const { buildRealisationsPage } = require('../services/pageRenderer');
   res.send(buildRealisationsPage(site));
 });
+
+router.get('/s/:slug/blog', async (req, res) => {
+  const { data: site } = await getAdminClient().from('sites').select('*').eq('slug', req.params.slug).eq('published', true).single();
+  if (!site) return res.status(404).send('Site introuvable');
+  if (typeof site.content === 'string') site.content = JSON.parse(site.content);
+  const { buildBlogPage } = require('../services/pageRenderer');
+  res.send(buildBlogPage(site));
+});

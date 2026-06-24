@@ -85,6 +85,7 @@ footer { background:#0f172a; color:rgba(255,255,255,0.6); padding:48px 5% 24px; 
     <li><a href="${baseUrl}/a-propos" class="${currentPage==='about'?'active':''}">À propos</a></li>
     <li><a href="${baseUrl}/services" class="${currentPage==='services'?'active':''}">Services</a></li>
     <li><a href="${baseUrl}/equipe" class="${currentPage==='team'?'active':''}">Équipe</a></li>
+    <li><a href="${baseUrl}/blog" class="${currentPage==='blog'?'active':''}">Blog</a></li>
     <li><a href="${baseUrl}/realisations" class="${currentPage==='realisations'?'active':''}">Réalisations</a></li>
     <li><a href="${baseUrl}/contact" class="nav-cta ${currentPage==='contact'?'active':''}">Contact</a></li>
   </ul>
@@ -460,7 +461,7 @@ function buildContactPage(site) {
 ` + buildFooter(site, wa);
 }
 
-module.exports = { buildHomePage, buildAboutPage, buildServicesPage, buildTeamPage, buildContactPage, buildRealisationsPage };
+module.exports = { buildHomePage, buildAboutPage, buildServicesPage, buildTeamPage, buildContactPage, buildRealisationsPage, buildBlogPage };
 
 function buildRealisationsPage(site, images = {}) {
   const { nav, primary, baseUrl, c } = buildSharedAssets(site, 'realisations');
@@ -504,6 +505,45 @@ function buildRealisationsPage(site, images = {}) {
       <h2 style="color:#fff;font-size:1.8rem;font-weight:700;margin-bottom:16px;">Vous avez un projet ?</h2>
       <p style="color:rgba(255,255,255,0.85);margin-bottom:28px;">Parlons de vos besoins et voyons comment nous pouvons vous aider.</p>
       ${wa ? `<a href="https://wa.me/${wa}?text=${waMsg}" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;padding:14px 32px;border-radius:12px;font-weight:700;text-decoration:none;font-size:1rem;">💬 Discuter du projet</a>` : ''}
+    </div>
+  </section>
+` + buildFooter(site, wa);
+}
+
+function buildBlogPage(site) {
+  const { nav, primary, baseUrl, c } = buildSharedAssets(site, 'blog');
+  const wa = site.content && site.content.phone ? site.content.phone.replace(/\D/g,'') : '';
+
+  const articles = (c.blog || []).map((b, i) => `
+    <div class="card" style="overflow:hidden;padding:0;cursor:pointer;">
+      ${b.image
+        ? `<div style="width:100%;height:200px;overflow:hidden;"><img src="${b.image}" alt="${escapeHtml(b.titre)}" style="width:100%;height:100%;object-fit:cover;transition:transform .4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"/></div>`
+        : `<div style="width:100%;height:200px;background:linear-gradient(135deg,${primary},${primary}88);display:flex;align-items:center;justify-content:center;font-size:3rem;">📝</div>`}
+      <div style="padding:24px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <span style="background:${primary}15;color:${primary};padding:4px 12px;border-radius:50px;font-size:.75rem;font-weight:700;">${escapeHtml(b.categorie||'Article')}</span>
+          <span style="font-size:.75rem;color:#9ca3af;">🕐 ${escapeHtml(b.temps_lecture||'3 min')}</span>
+        </div>
+        <h3 style="font-size:1.05rem;font-weight:700;color:#1a1a2e;margin-bottom:10px;line-height:1.4;">${escapeHtml(b.titre)}</h3>
+        <p style="font-size:.875rem;color:#6b7280;line-height:1.7;margin-bottom:16px;">${escapeHtml(b.resume||'')}</p>
+        <span style="color:${primary};font-size:.85rem;font-weight:600;">Lire la suite →</span>
+      </div>
+    </div>`).join('');
+
+  return nav + `
+  <section style="background:linear-gradient(135deg,#f8fafc,#fff);padding:100px 5% 60px;">
+    <div class="container">
+      <span class="section-label">Blog & Actualités</span>
+      <h1 class="section-title">Nos derniers articles</h1>
+      <p class="section-sub">Conseils, actualités et insights de notre secteur.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;">
+        ${articles || '<p style="color:#9ca3af">Aucun article disponible pour l\'instant.</p>'}
+      </div>
     </div>
   </section>
 ` + buildFooter(site, wa);

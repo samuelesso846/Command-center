@@ -125,6 +125,11 @@ Réponds UNIQUEMENT avec un objet JSON valide :
     {"titre": "projet 2", "client": "type client", "description": "2 phrases", "resultat": "impact chiffré", "image_query": "mot-clé anglais"},
     {"titre": "projet 3", "client": "type client", "description": "2 phrases", "resultat": "impact chiffré", "image_query": "mot-clé anglais"}
   ],
+  "blog": [
+    {"titre": "titre article accrocheur lié au secteur", "resume": "2-3 phrases qui donnent envie de lire. Apporte une vraie valeur.", "categorie": "categorie courte", "temps_lecture": "3 min", "image_query": "mot-clé anglais Unsplash pour illustrer l'article"},
+    {"titre": "titre article 2", "resume": "2-3 phrases valeur", "categorie": "categorie", "temps_lecture": "5 min", "image_query": "mot-clé anglais"},
+    {"titre": "titre article 3", "resume": "2-3 phrases valeur", "categorie": "categorie", "temps_lecture": "4 min", "image_query": "mot-clé anglais"}
+  ],
   "whatsapp_message": "message WhatsApp pré-rempli naturel et engageant",
   "footer_description": "slogan de positionnement court et mémorisable"
 }`;
